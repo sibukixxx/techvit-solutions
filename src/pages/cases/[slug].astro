@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from "astro:content";
+import BeforeAfter from "@/components/BeforeAfter.astro";
+import Cta from "@/components/Cta.astro";
+import ModelCaseNote from "@/components/ModelCaseNote.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+import { AUTOMATION_LABELS, INDUSTRY_LABELS } from "@/lib/site";
+
+export async function getStaticPaths() {
+  const cases = await getCollection("cases", (e) => e.data.published);
+  return cases.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Base title={entry.data.title} description={`${entry.data.title}のモデルケース。Before / After と削減時間、使用技術、開発期間を紹介します。`}>
+  <Section>
+    <p class="text-sm font-bold text-brand-600">モデルケース</p>
+    <h1 class="mt-2 max-w-3xl text-2xl font-bold text-slate-900 sm:text-3xl">
+      {entry.data.title}
+    </h1>
+    <div class="mt-4 flex flex-wrap gap-2 text-xs">
+      <span class="rounded-full bg-brand-100 px-2.5 py-0.5 font-bold text-brand-800">
+        {INDUSTRY_LABELS[entry.data.industry]}
+      </span>
+      {
+        entry.data.automation.map((a) => (
+          <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-slate-600">
+            {AUTOMATION_LABELS[a]}
+          </span>
+        ))
+      }
+    </div>
+
+    {
+      entry.data.is_model_case && (
+        <div class="mt-6">
+          <ModelCaseNote />
+        </div>
+      )
+    }
+
+    <div class="mt-8">
+      <BeforeAfter before={entry.data.before} after={entry.data.after} />
+    </div>
+
+    <article class="prose prose-slate mt-10 max-w-3xl">
+      <Content />
+    </article>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+      <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs font-bold text-slate-500">実現の根拠（使用技術）</p>
+        <ul class="mt-2 space-y-1 text-sm text-slate-700">
+          {entry.data.tech.map((t) => <li>・{t}</li>)}
+        </ul>
+      </div>
+      <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+        <p class="text-xs font-bold text-slate-500">開発期間</p>
+        <p class="mt-2 text-sm text-slate-700">{entry.data.period}</p>
+      </div>
+      {
+        entry.data.price_range && (
+          <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <p class="text-xs font-bold text-slate-500">費用の目安</p>
+            <p class="mt-2 text-sm text-slate-700">{entry.data.price_range}</p>
+          </div>
+        )
+      }
+    </div>
+  </Section>
+  <Cta />
+</Base>

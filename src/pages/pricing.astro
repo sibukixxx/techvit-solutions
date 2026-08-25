@@ -1,0 +1,82 @@
+---
+import Cta from "@/components/Cta.astro";
+import Card from "@/components/ui/Card.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+
+const plans = [
+  {
+    step: "STEP 1",
+    name: "自動化診断",
+    price: "3〜5万円",
+    period: "1〜2週間",
+    items: [
+      "現状の手作業のヒアリングと棚卸し",
+      "自動化できる業務・できない業務の切り分け",
+      "削減時間と費用の試算レポート",
+    ],
+    note: "レポートだけ受け取って社内検討に使っていただいても構いません。",
+  },
+  {
+    step: "STEP 2",
+    name: "PoC（お試し導入）",
+    price: "10〜30万円",
+    period: "2週間〜1ヶ月",
+    items: [
+      "効果が大きい業務を1つ選定",
+      "実データで動く試作品を構築",
+      "削減時間の実測と本開発の見積り",
+    ],
+    note: "「思ったより効果がない」と分かるのもPoCの成果です。ここで止めるのも自由です。",
+  },
+  {
+    step: "STEP 3",
+    name: "本開発",
+    price: "30万円〜",
+    period: "1〜3ヶ月",
+    items: [
+      "PoCで確認した仕組みを日常業務で使える形に",
+      "エラー処理・確認フロー・引き継ぎ資料まで含む",
+      "導入後1ヶ月の調整期間つき",
+    ],
+    note: "規模により変動します。PoCの結果をもとに固定金額でお見積りします。",
+  },
+];
+---
+
+<Base
+  title="料金"
+  description="自動化診断3〜5万円、PoC 10〜30万円、本開発30万円〜。小さく試して効果を見てから進められる3ステップの料金体系です。既存ツールの改修も対応します。"
+>
+  <Section
+    title="料金"
+    lead="いきなり大きな開発は勧めません。各ステップで金額と成果物を先に提示し、次に進むかはその都度ご判断いただけます。"
+  >
+    <div class="grid gap-6 lg:grid-cols-3">
+      {
+        plans.map((plan) => (
+          <Card>
+            <p class="text-sm font-bold text-brand-600">{plan.step}</p>
+            <h2 class="mt-1 text-xl font-bold text-slate-900">{plan.name}</h2>
+            <p class="mt-2 text-3xl font-bold text-slate-900">{plan.price}</p>
+            <p class="mt-1 text-sm text-slate-500">期間の目安: {plan.period}</p>
+            <ul class="mt-4 space-y-2 border-t border-slate-100 pt-4">
+              {plan.items.map((item) => (
+                <li class="text-sm text-slate-700">✓ {item}</li>
+              ))}
+            </ul>
+            <p class="mt-4 text-xs text-slate-500">{plan.note}</p>
+          </Card>
+        ))
+      }
+    </div>
+
+    <div class="mt-10 rounded-xl border border-slate-200 bg-slate-50 p-6">
+      <h2 class="text-lg font-bold text-slate-900">既存ツールの改修</h2>
+      <p class="mt-2 max-w-3xl text-sm text-slate-600">
+        「前に作ってもらったマクロ・スクリプトが動かなくなった」「今あるツールにAIを組み込みたい」といったご相談も承ります。内容を拝見して個別にお見積りします。
+      </p>
+    </div>
+  </Section>
+  <Cta />
+</Base>

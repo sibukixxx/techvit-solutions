@@ -1,0 +1,73 @@
+---
+import {
+  formatMinutes,
+  reductionRate,
+  type Step,
+  savedMinutes,
+  totalMinutes,
+} from "@/lib/reduction";
+
+interface Props {
+  before: Step[];
+  after: Step[];
+  /** 「1回あたり」「月あたり」など、削減時間の単位の補足 */
+  unit?: string;
+}
+
+const { before, after, unit = "1回あたり" } = Astro.props;
+
+const beforeTotal = totalMinutes(before);
+const afterTotal = totalMinutes(after);
+const saved = savedMinutes(before, after);
+const rate = reductionRate(before, after);
+---
+
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+  <div class="grid gap-px overflow-hidden rounded-t-xl bg-slate-200 sm:grid-cols-2">
+    <div class="bg-slate-50 p-5">
+      <p class="text-sm font-bold text-slate-500">Before（手作業）</p>
+      <ul class="mt-3 space-y-2">
+        {
+          before.map((s) => (
+            <li class="flex items-baseline justify-between gap-3 text-sm">
+              <span class="text-slate-700">{s.step}</span>
+              <span class="shrink-0 font-mono text-slate-500">
+                {formatMinutes(s.minutes)}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-4 border-t border-slate-200 pt-3 text-right text-sm font-bold text-slate-700">
+        合計 {formatMinutes(beforeTotal)}
+      </p>
+    </div>
+    <div class="bg-brand-50 p-5">
+      <p class="text-sm font-bold text-brand-700">After（自動化後）</p>
+      <ul class="mt-3 space-y-2">
+        {
+          after.map((s) => (
+            <li class="flex items-baseline justify-between gap-3 text-sm">
+              <span class="text-slate-700">{s.step}</span>
+              <span class="shrink-0 font-mono text-slate-500">
+                {formatMinutes(s.minutes)}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-4 border-t border-brand-100 pt-3 text-right text-sm font-bold text-brand-700">
+        合計 {formatMinutes(afterTotal)}
+      </p>
+    </div>
+  </div>
+  <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 rounded-b-xl bg-brand-900 px-5 py-4 text-white">
+    <p class="text-sm">
+      {unit}の削減時間
+    </p>
+    <p class="text-2xl font-bold">
+      −{formatMinutes(saved)}
+      <span class="ml-2 text-base font-bold text-accent-400">（{rate}%削減）</span>
+    </p>
+  </div>
+</div>

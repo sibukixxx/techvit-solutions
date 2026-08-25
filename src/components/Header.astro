@@ -1,0 +1,29 @@
+---
+import { NAV_ITEMS, SITE_NAME } from "@/lib/site";
+---
+
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+    <a href="/" class="text-lg font-bold tracking-tight text-brand-900">
+      {SITE_NAME}
+    </a>
+    <nav class="flex items-center gap-1 sm:gap-2">
+      {
+        NAV_ITEMS.map((item) => (
+          <a
+            href={item.href}
+            class="hidden rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 sm:block"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a
+        href="/contact/"
+        class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-700"
+      >
+        無料相談
+      </a>
+    </nav>
+  </div>
+</header>

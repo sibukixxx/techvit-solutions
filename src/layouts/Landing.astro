@@ -1,0 +1,24 @@
+---
+import Base from "@/layouts/Base.astro";
+import { serviceJsonLd } from "@/lib/seo";
+
+interface Props {
+  title: string;
+  description: string;
+  ogTitle?: string;
+  ogImage?: string;
+}
+
+const { title, description, ogTitle, ogImage } = Astro.props;
+const jsonLd = [serviceJsonLd({ name: title, description })];
+---
+
+<Base
+  title={title}
+  description={description}
+  ogTitle={ogTitle}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
+>
+  <slot />
+</Base>

@@ -1,0 +1,40 @@
+---
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+import { GOOGLE_FORM_EMBED_URL, GOOGLE_FORM_URL } from "@/lib/site";
+---
+
+<Base
+  title="無料相談"
+  description="業務自動化の無料相談フォーム。「うちの業務でもできる？」の段階で大丈夫です。1営業日以内に返信します。"
+>
+  <Section
+    title="無料相談"
+    lead="「うちの業務でもできる？」「いくらかかる？」の段階で大丈夫です。現状の手作業を教えていただければ、1営業日以内に返信します。"
+  >
+    <div class="max-w-3xl">
+      <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <iframe
+          src={GOOGLE_FORM_EMBED_URL}
+          title="無料相談フォーム"
+          class="h-[1100px] w-full"
+          loading="lazy"
+        >
+          読み込んでいます…
+        </iframe>
+      </div>
+      <p class="mt-4 text-sm text-slate-600">
+        フォームが表示されない場合は、
+        <a
+          href={GOOGLE_FORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-bold text-brand-600 underline hover:text-brand-700"
+        >
+          こちらから別タブで開いて
+        </a>
+        ご回答ください。
+      </p>
+    </div>
+  </Section>
+</Base>
