@@ -1,0 +1,100 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import BeforeAfter from "@/components/BeforeAfter.astro";
+import Cta from "@/components/Cta.astro";
+import ModelCaseNote from "@/components/ModelCaseNote.astro";
+import Card from "@/components/ui/Card.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+import { formatMinutes, savedMinutes } from "@/lib/reduction";
+import { INDUSTRY_LABELS } from "@/lib/site";
+
+export async function getStaticPaths() {
+  const automations = await getCollection(
+    "automation",
+    (e) => e.data.published,
+  );
+  return automations.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const relatedCases = (
+  await Promise.all(entry.data.related_cases.map((id) => getEntry("cases", id)))
+).filter((c) => c?.data.published);
+---
+
+<Base title={entry.data.title} description={entry.data.description}>
+  <div class="bg-brand-950 text-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <p class="text-sm font-bold text-brand-300">業務自動化</p>
+      <h1 class="mt-2 text-3xl font-bold sm:text-4xl">{entry.data.title}</h1>
+      <p class="mt-4 max-w-2xl text-brand-100">{entry.data.lead}</p>
+    </div>
+  </div>
+
+  <Section title="こんな状態に心当たりはありませんか？">
+    <ul class="grid gap-3 sm:grid-cols-2">
+      {
+        entry.data.pains.map((pain) => (
+          <li class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-700">
+            {pain}
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section
+      title="Before → After（作業時間の例）"
+      lead="自動化した場合の作業時間のイメージです。実際の診断では、貴社の業務で試算します。"
+    >
+      <BeforeAfter before={entry.data.before} after={entry.data.after} />
+    </Section>
+  </div>
+
+  <Section>
+    <article class="prose prose-slate max-w-3xl">
+      <Content />
+    </article>
+  </Section>
+
+  {
+    relatedCases.length > 0 && (
+      <div class="bg-slate-50">
+        <Section title="関連するモデルケース">
+          <div class="grid gap-6 sm:grid-cols-2">
+            {relatedCases.map((c) => {
+              if (!c) return null;
+              const saved = savedMinutes(c.data.before, c.data.after);
+              return (
+                <Card href={`/cases/${c.id}/`}>
+                  <p class="text-xs font-bold text-slate-500">
+                    {INDUSTRY_LABELS[c.data.industry]}
+                  </p>
+                  <h3 class="mt-1 font-bold text-slate-900">{c.data.title}</h3>
+                  <p class="mt-3 text-sm text-slate-600">
+                    1回あたり
+                    <span class="ml-1 text-xl font-bold text-brand-700">
+                      −{formatMinutes(saved)}
+                    </span>
+                  </p>
+                </Card>
+              );
+            })}
+          </div>
+          <div class="mt-6">
+            <ModelCaseNote />
+          </div>
+        </Section>
+      </div>
+    )
+  }
+
+  <Cta />
+</Base>

@@ -1,0 +1,9 @@
+{
+  // Cloudflare Workers 静的アセット配信のみ（SSR / Worker ロジックなし）
+  "name": "techvit-solutions",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

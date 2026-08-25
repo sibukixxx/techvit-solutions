@@ -1,0 +1,35 @@
+---
+import { NAV_ITEMS, SITE_NAME } from "@/lib/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-slate-200 bg-slate-50">
+  <div class="mx-auto max-w-6xl px-4 py-10">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <p class="text-base font-bold text-brand-900">{SITE_NAME}</p>
+        <p class="mt-2 max-w-sm text-sm text-slate-600">
+          毎月くり返す手作業を、AIで自動化。相談した本人が設計して作ります。
+        </p>
+      </div>
+      <nav class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+        {
+          [...NAV_ITEMS, { href: "/contact/", label: "無料相談" }].map(
+            (item) => (
+              <a
+                href={item.href}
+                class="text-slate-600 hover:text-slate-900 hover:underline"
+              >
+                {item.label}
+              </a>
+            ),
+          )
+        }
+      </nav>
+    </div>
+    <p class="mt-8 text-xs text-slate-400">
+      © {year} {SITE_NAME}
+    </p>
+  </div>
+</footer>

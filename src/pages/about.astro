@@ -1,0 +1,48 @@
+---
+import Cta from "@/components/Cta.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+---
+
+<Base
+  title="開発者について"
+  description="TechVit Solutionsは、相談を受けた本人が設計して作る業務自動化サービスです。営業と開発者の間で話が食い違う、ということがありません。"
+>
+  <Section title="開発者について">
+    <div class="max-w-3xl space-y-6 text-slate-700">
+      <p class="text-xl font-bold text-slate-900">
+        相談した本人が、設計して、作ります。
+      </p>
+      <p>
+        TechVit Solutions は、ソフトウェアエンジニアが個人で運営する業務自動化サービスです。
+        営業担当・コンサルタント・開発チームと何度も同じ説明をする必要はありません。
+        最初の無料相談から設計・開発・導入後の調整まで、すべて同じ人間が担当します。
+      </p>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="font-bold text-slate-900">この形の良いところ</h2>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li>・伝言ゲームがないので、話が早い</li>
+          <li>・大人数の体制費用が乗らないので、価格を抑えられる</li>
+          <li>・「作って終わり」ではなく、導入後も同じ人に相談できる</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">得意領域</h2>
+        <p class="mt-2">
+          AI（LLM）を組み込んだ業務システムの設計・開発。
+          特に、PDF・文書の検索可能化、Excel業務の自動化、メール処理、AI-OCRによる帳票処理など、
+          「毎月くり返す手作業」をなくす仕組みづくりを得意としています。
+        </p>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">進め方のポリシー</h2>
+        <ul class="mt-2 space-y-2">
+          <li>・小さく試して、効果を数字で確認してから広げる</li>
+          <li>・AIに全部任せず、人が確認するフローを必ず残す</li>
+          <li>・できないこと・効果が薄いことは、最初にそう言う</li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+  <Cta />
+</Base>

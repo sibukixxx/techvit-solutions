@@ -1,0 +1,25 @@
+---
+import Button from "@/components/ui/Button.astro";
+
+interface Props {
+  title?: string;
+  lead?: string;
+}
+
+const {
+  title = "その手作業、なくせるか無料で診断します",
+  lead = "「うちの業務でもできる？」の段階で大丈夫です。現状の手作業を伺い、自動化できるか・いくらかかるかをお答えします。",
+} = Astro.props;
+---
+
+<section class="bg-brand-900">
+  <div class="mx-auto max-w-6xl px-4 py-14 text-center sm:py-16">
+    <h2 class="text-2xl font-bold text-white sm:text-3xl">{title}</h2>
+    <p class="mx-auto mt-4 max-w-2xl text-brand-100">{lead}</p>
+    <div class="mt-8">
+      <Button href="/contact/" size="lg" class="bg-accent-500 hover:bg-accent-600 text-brand-950">
+        無料相談する（1営業日以内に返信）
+      </Button>
+    </div>
+  </div>
+</section>
