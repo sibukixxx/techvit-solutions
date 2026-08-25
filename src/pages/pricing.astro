@@ -1,4 +1,5 @@
 ---
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
@@ -48,6 +49,7 @@ const plans = [
   title="料金"
   description="自動化診断3〜5万円、PoC 10〜30万円、本開発30万円〜。小さく試して効果を見てから進められる3ステップの料金体系です。既存ツールの改修も対応します。"
 >
+  <Breadcrumb items={[{ name: "料金" }]} />
   <Section
     title="料金"
     lead="いきなり大きな開発は勧めません。各ステップで金額と成果物を先に提示し、次に進むかはその都度ご判断いただけます。"

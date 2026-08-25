@@ -1,0 +1,34 @@
+---
+import { type BreadcrumbItem, breadcrumbJsonLd } from "@/lib/seo";
+
+interface Props {
+  /** 「ホーム」を除いた、現在地までのパンくず項目 */
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+const trail: BreadcrumbItem[] = [{ name: "ホーム", path: "/" }, ...items];
+const jsonLd = breadcrumbJsonLd(trail);
+---
+
+<nav aria-label="パンくずリスト" class="border-b border-slate-100 bg-white">
+  <ol class="mx-auto flex max-w-6xl flex-wrap items-center gap-1.5 px-4 py-3 text-xs text-slate-500">
+    {
+      trail.map((item, i) => (
+        <li class="flex items-center gap-1.5">
+          {i > 0 && <span aria-hidden="true">/</span>}
+          {i === trail.length - 1 || !item.path ? (
+            <span class="font-medium text-slate-700" aria-current="page">
+              {item.name}
+            </span>
+          ) : (
+            <a href={item.path} class="hover:text-brand-600 hover:underline">
+              {item.name}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

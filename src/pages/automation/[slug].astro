@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import BeforeAfter from "@/components/BeforeAfter.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
 import ModelCaseNote from "@/components/ModelCaseNote.astro";
 import Card from "@/components/ui/Card.astro";
@@ -29,6 +30,12 @@ const relatedCases = (
 ---
 
 <Base title={entry.data.title} description={entry.data.description}>
+  <Breadcrumb
+    items={[
+      { name: "業務自動化", path: "/automation/" },
+      { name: entry.data.title },
+    ]}
+  />
   <div class="bg-brand-950 text-white">
     <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
       <p class="text-sm font-bold text-brand-300">業務自動化</p>

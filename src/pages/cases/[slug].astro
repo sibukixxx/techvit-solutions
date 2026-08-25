@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import BeforeAfter from "@/components/BeforeAfter.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
 import ModelCaseNote from "@/components/ModelCaseNote.astro";
 import Section from "@/components/ui/Section.astro";
@@ -20,6 +21,12 @@ const { Content } = await render(entry);
 ---
 
 <Base title={entry.data.title} description={`${entry.data.title}のモデルケース。Before / After と削減時間、使用技術、開発期間を紹介します。`}>
+  <Breadcrumb
+    items={[
+      { name: "モデルケース", path: "/cases/" },
+      { name: entry.data.title },
+    ]}
+  />
   <Section>
     <p class="text-sm font-bold text-brand-600">モデルケース</p>
     <h1 class="mt-2 max-w-3xl text-2xl font-bold text-slate-900 sm:text-3xl">
