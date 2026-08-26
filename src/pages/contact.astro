@@ -2,7 +2,7 @@
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
-import { GOOGLE_FORM_EMBED_URL, GOOGLE_FORM_URL } from "@/lib/site";
+import { GOOGLE_FORM_EMBED_URL_JA, GOOGLE_FORM_URL_JA } from "@/lib/site";
 ---
 
 <Base
@@ -18,7 +18,7 @@ import { GOOGLE_FORM_EMBED_URL, GOOGLE_FORM_URL } from "@/lib/site";
     <div class="max-w-3xl">
       <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
         <iframe
-          src={GOOGLE_FORM_EMBED_URL}
+          src={GOOGLE_FORM_EMBED_URL_JA}
           title="無料相談フォーム"
           class="h-[1100px] w-full"
           loading="lazy"
@@ -29,7 +29,7 @@ import { GOOGLE_FORM_EMBED_URL, GOOGLE_FORM_URL } from "@/lib/site";
       <p class="mt-4 text-sm text-slate-600">
         フォームが表示されない場合は、
         <a
-          href={GOOGLE_FORM_URL}
+          href={GOOGLE_FORM_URL_JA}
           target="_blank"
           rel="noopener noreferrer"
           class="font-bold text-brand-600 underline hover:text-brand-700"

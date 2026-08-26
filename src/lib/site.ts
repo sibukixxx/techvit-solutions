@@ -3,13 +3,13 @@ export const SITE_URL = "https://solutions.techvit.me";
 export const SITE_DESCRIPTION =
   "PDF検索・Excel転記・メール処理など、毎月くり返す手作業をAIで自動化。診断3〜5万円から、相談した本人が設計して作る業務自動化サービス。";
 
-// TODO: Google Form 作成後に本番 URL へ差し替える（§6 残タスク）
-export const GOOGLE_FORM_URL =
-  "https://docs.google.com/forms/d/e/PLACEHOLDER/viewform";
-export const GOOGLE_FORM_EMBED_URL = `${GOOGLE_FORM_URL}?embedded=true`;
+export const GOOGLE_FORM_URL_JA =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfKUnH6DRmqjD-_uugEAxOPNLU1s7j1ELpgqvJeMDBwQ7pUpQ/viewform";
+export const GOOGLE_FORM_EMBED_URL_JA = `${GOOGLE_FORM_URL_JA}?embedded=true`;
 
-// TODO: 英語版の問い合わせ導線が決まり次第差し替える（Google Form の英語版 or 専用アドレス）
-export const CONTACT_EMAIL = "hello@techvit.me";
+export const GOOGLE_FORM_URL_EN =
+  "https://docs.google.com/forms/d/e/1FAIpQLSetPISiw14cUgju86XyJcpVFrnNW8vv8Vc2EeSCN7f2xufadQ/viewform";
+export const GOOGLE_FORM_EMBED_URL_EN = `${GOOGLE_FORM_URL_EN}?embedded=true`;
 
 export const NAV_ITEMS = [
   { href: "/automation/", label: "業務自動化" },

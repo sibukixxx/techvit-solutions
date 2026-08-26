@@ -1,13 +1,8 @@
 ---
 import Breadcrumb from "@/components/Breadcrumb.astro";
-import Button from "@/components/ui/Button.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
-import { CONTACT_EMAIL } from "@/lib/site";
-
-const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-  "Free consultation request — TechVit Solutions",
-)}`;
+import { GOOGLE_FORM_EMBED_URL_EN, GOOGLE_FORM_URL_EN } from "@/lib/site";
 ---
 
 <Base
@@ -21,23 +16,28 @@ const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
     title="Free Consultation"
     lead="It's fine to reach out at the 'could this work for us?' or 'roughly what would this cost?' stage. Tell us about your current manual process and we'll reply within 1 business day."
   >
-    <div class="max-w-2xl rounded-xl border border-slate-200 bg-white p-8">
-      <p class="text-slate-700">
-        Email us with a short description of the manual work you're dealing with — what it is,
-        roughly how much time it takes, and any tools you're currently using. That's enough for
-        us to get started.
-      </p>
-      <div class="mt-6">
-        <Button href={mailtoHref} size="lg">
-          Email us: {CONTACT_EMAIL}
-        </Button>
+    <div class="max-w-3xl">
+      <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <iframe
+          src={GOOGLE_FORM_EMBED_URL_EN}
+          title="Free consultation form"
+          class="h-[1100px] w-full"
+          loading="lazy"
+        >
+          Loading…
+        </iframe>
       </div>
-      <p class="mt-6 text-sm text-slate-500">
-        Prefer a web form? Our{" "}
-        <a href="/contact/" class="font-bold text-brand-600 underline hover:text-brand-700">
-          Japanese-language contact form
+      <p class="mt-4 text-sm text-slate-600">
+        If the form doesn't load,{" "}
+        <a
+          href={GOOGLE_FORM_URL_EN}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-bold text-brand-600 underline hover:text-brand-700"
+        >
+          open it in a new tab
         </a>{" "}
-        also reaches the same inbox.
+        instead.
       </p>
     </div>
   </Section>

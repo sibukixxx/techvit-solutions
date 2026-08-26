@@ -68,7 +68,7 @@ src/
 - **UI文字列辞書**: `src/lib/i18n.ts` の `t(locale)` に集約。共通コンポーネント（Header/Footer/Cta/ModelCaseNote/Breadcrumb/BeforeAfter/Base/Landing）は `locale?: Locale`（デフォルト `"ja"`）を受け取り、省略時は既存の日本語ページと同じ出力になる
 - **hreflang**: 言語ペアが実在するページだけ `Base` に `alternates={{ ja: "...", en: "..." }}` を渡す（`src/lib/seo.ts` の `alternateLinks`）。ペアがないページ（例: `/en/services/` は日本語側が automation 6ページに分割されており1:1対応がないため）には付けない
 - **`/en/services/`** は automation 6ページの内容を1ページに集約したダイジェスト（Content Collections ではなく手書きの `.astro`）。個別ページの翻訳は Phase 2
-- **`/en/contact/`** は英語版 Google Form が無いため、`CONTACT_EMAIL`（`src/lib/site.ts`、プレースホルダ）への `mailto:` リンクにしている。英語フォームができ次第差し替える
+- **`/en/contact/`** は英語版 Google Form（`GOOGLE_FORM_URL_EN`、`src/lib/site.ts`）を埋め込み。日本語版と同じ構成（iframe + 別タブリンク）
 - **新しい日本語コンテンツを追加/更新したら**: 対応する `en/` ファイルがあれば同じPRで更新する（翻訳ドリフト防止）
 
 ## SEO
@@ -112,11 +112,10 @@ git commit -m "ci: enable GitHub Actions workflow" && git push
 
 ## 残タスク
 
-- [ ] Google Form 作成 → `src/lib/site.ts` の `GOOGLE_FORM_URL` を本番 URL に差し替え
+- [x] Google Form 作成 → `src/lib/site.ts` の `GOOGLE_FORM_URL_JA` / `GOOGLE_FORM_URL_EN` を本番 URL に差し替え
 - [ ] `public/og-default.png` を正式デザインに差し替え（現状は無地グラデーションのプレースホルダ）
-- [ ] Cloudflare ダッシュボードで GitHub 連携（ビルド: `pnpm build` / 出力: `dist`）、または `pnpm deploy` で先に手動デプロイして動作確認
-- [ ] カスタムドメイン `solutions.techvit.me` の割り当て
+- [x] Cloudflare ダッシュボードで GitHub 連携（ビルド: `pnpm build` / 出力: `dist`）
+- [x] カスタムドメイン `solutions.techvit.me` の割り当て
 - [ ] デプロイ後、Search Console にプロパティ登録 → `sitemap-index.xml` を送信、Analytics（GA4 など）タグを `Base.astro` に追加
 - [ ] 削減時間シミュレーター island（M6、React + TanStack Form）
-- [ ] `CONTACT_EMAIL`（`src/lib/site.ts`）を実際に受信できるアドレスに差し替え、または英語版 Google Form を用意して `/en/contact/` を切り替え
 - [ ] Phase 2: `/en/industry/trade/`（貿易LP英語版）と automation 6ページの個別英訳（`docs/i18n-en-plan.md` §3, §7 参照）
