@@ -1,0 +1,171 @@
+---
+import BeforeAfter from "@/components/BeforeAfter.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Cta from "@/components/Cta.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+
+const services = [
+  {
+    slug: "pdf",
+    title: "PDF & Documents",
+    lead: "Manuals, policies, specs. Turn “it's in a PDF somewhere” into a few-second lookup.",
+    pains: [
+      "Policy and manual PDFs are scattered across shared folders, so just finding one is a chore",
+      "“We must have handled something similar before” ends up redone from scratch anyway",
+      "Only the veteran staff know which document has the answer, and where",
+    ],
+    before: [
+      { step: "Search folders for the likely PDF", minutes: 15 },
+      { step: "Open it and hunt for the relevant section", minutes: 20 },
+      { step: "Give up and ask someone who knows", minutes: 10 },
+    ],
+    after: [
+      { step: "Ask a question, review the answer and its source", minutes: 3 },
+    ],
+  },
+  {
+    slug: "excel",
+    title: "Excel & Admin Work",
+    lead: "Data entry, aggregation, reconciliation, reports. If you do the same steps every month, it's almost certainly automatable.",
+    pains: [
+      "Copying data from multiple files into the same sheet every month",
+      "Month-end aggregation and reporting eats an entire day",
+      "Manually cross-checking two tables by eye, worried about mistakes",
+    ],
+    before: [
+      { step: "Collect and open files from each department", minutes: 20 },
+      { step: "Enter and format data into the target sheet", minutes: 60 },
+      { step: "Aggregate and build the report", minutes: 40 },
+      { step: "Check everything by eye", minutes: 20 },
+    ],
+    after: [
+      { step: "Review the automated output and fix exceptions", minutes: 15 },
+    ],
+  },
+  {
+    slug: "mail",
+    title: "Email",
+    lead: "Inquiries, orders, requests arriving daily. Let AI handle triage and draft replies.",
+    pains: [
+      "The first-thing-in-the-morning inbox triage alone burns 30 minutes",
+      "Writing near-identical replies to similar inquiries from scratch, every time",
+      "Manually copying email content into the core system or a spreadsheet",
+    ],
+    before: [
+      { step: "Read inbound email and sort it", minutes: 30 },
+      { step: "Draft replies to routine inquiries", minutes: 40 },
+      { step: "Log the content into a system or ledger", minutes: 20 },
+    ],
+    after: [
+      {
+        step: "Review the AI's classification, draft, and logged entry, then send",
+        minutes: 15,
+      },
+    ],
+  },
+  {
+    slug: "sales",
+    title: "Sales",
+    lead: "Account research, list building, proposal drafts, CRM entry. Cut prep time to under half.",
+    pains: [
+      "Building a target list eats most of the sales team's time",
+      "Writing proposals and email copy from scratch, every single time",
+      "CRM entry after a meeting keeps getting pushed to “later” and piles up",
+    ],
+    before: [
+      {
+        step: "Research candidate companies online and take notes",
+        minutes: 60,
+      },
+      { step: "Organize into a prioritized list", minutes: 30 },
+      { step: "Write a proposal and email per company", minutes: 45 },
+      { step: "Log the activity in the CRM", minutes: 20 },
+    ],
+    after: [
+      {
+        step: "Review and adjust the AI-drafted research summary, list, and copy",
+        minutes: 40,
+      },
+    ],
+  },
+  {
+    slug: "backoffice",
+    title: "Back Office",
+    lead: "Invoices, receipts, purchase orders. Eliminate manual entry from stacks of paper and PDFs with OCR + AI.",
+    pains: [
+      "Opening every invoice PDF that arrives each month and typing it into accounting software",
+      "Every vendor uses a different format, so OCR still means manual correction anyway",
+      "Overtime spikes hard right at month-end and month-start",
+    ],
+    before: [
+      { step: "Open each invoice (PDF or paper) and review it", minutes: 30 },
+      { step: "Enter it into accounting software or a ledger", minutes: 60 },
+      { step: "Manually check amounts and payees", minutes: 30 },
+    ],
+    after: [
+      { step: "Review the AI's extracted results, then import", minutes: 20 },
+    ],
+  },
+  {
+    slug: "search",
+    title: "Internal AI Search",
+    lead: "Eliminate “who do I even ask about this?” with an AI help desk that answers from your own rules, procedures, and precedents.",
+    pains: [
+      "Admin and IT get the same questions every single day",
+      "Only a handful of people can answer, and it keeps eating their time",
+      "The manual exists, but nobody reads it or can find the right part",
+    ],
+    before: [
+      { step: "Hunt for who to ask, then ask", minutes: 10 },
+      {
+        step: "The person interrupts their work to look it up and reply",
+        minutes: 15,
+      },
+    ],
+    after: [
+      { step: "Ask the AI desk, review the answer and its source", minutes: 2 },
+    ],
+  },
+];
+---
+
+<Base
+  title="What We Automate"
+  description="PDF search, Excel entry, email, sales prep, back-office invoice processing, and internal AI search — see what TechVit Solutions can automate for your team."
+  locale="en"
+>
+  <Breadcrumb items={[{ name: "Services" }]} locale="en" />
+
+  <div class="bg-brand-950 text-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <p class="text-sm font-bold text-brand-300">Services</p>
+      <h1 class="mt-2 text-3xl font-bold sm:text-4xl">What We Automate</h1>
+      <p class="mt-4 max-w-2xl text-brand-100">
+        If any of the tasks below sound familiar, they're a strong candidate for automation.
+        We start with a paid assessment on the one task costing you the most time.
+      </p>
+    </div>
+  </div>
+
+  {
+    services.map((s, i) => (
+      <div id={s.slug} class:list={["scroll-mt-16", i % 2 === 1 && "bg-slate-50"]}>
+        <Section title={s.title} lead={s.lead}>
+          <ul class="grid gap-3 sm:grid-cols-2">
+            {s.pains.map((pain) => (
+              <li class="rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-700">
+                {pain}
+              </li>
+            ))}
+          </ul>
+          <div class="mt-8">
+            <BeforeAfter before={s.before} after={s.after} locale="en" />
+          </div>
+        </Section>
+      </div>
+    ))
+  }
+
+  <Cta locale="en" />
+</Base>

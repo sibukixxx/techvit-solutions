@@ -6,58 +6,55 @@ import Cta from "@/components/Cta.astro";
 import ModelCaseNote from "@/components/ModelCaseNote.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
-import { AUTOMATION_LABELS, INDUSTRY_LABELS } from "@/lib/site";
+import {
+  AUTOMATION_LABELS_BY_LOCALE,
+  INDUSTRY_LABELS_BY_LOCALE,
+} from "@/lib/i18n";
 
 export async function getStaticPaths() {
   const cases = await getCollection(
     "cases",
-    (e) => e.data.published && !e.id.startsWith("en/"),
-  );
-  const enSlugs = new Set(
-    (
-      await getCollection(
-        "cases",
-        (e) => e.data.published && e.id.startsWith("en/"),
-      )
-    ).map((e) => e.id.slice(3)),
+    (e) => e.data.published && e.id.startsWith("en/"),
   );
   return cases.map((entry) => ({
-    params: { slug: entry.id },
-    props: { entry, hasEnglish: enSlugs.has(entry.id) },
+    params: { slug: entry.id.slice(3) },
+    props: { entry },
   }));
 }
 
-const { entry, hasEnglish } = Astro.props;
+const { entry } = Astro.props;
 const { Content } = await render(entry);
-const alternates = hasEnglish
-  ? { ja: `/cases/${entry.id}/`, en: `/en/cases/${entry.id}/` }
-  : undefined;
+const slug = entry.id.slice(3);
+const industryLabels = INDUSTRY_LABELS_BY_LOCALE.en;
+const automationLabels = AUTOMATION_LABELS_BY_LOCALE.en;
 ---
 
 <Base
   title={entry.data.title}
-  description={`${entry.data.title}のモデルケース。Before / After と削減時間、使用技術、開発期間を紹介します。`}
-  alternates={alternates}
+  description={`${entry.data.title} — a model case with Before / After time comparisons, the technology behind it, and the build timeline.`}
+  locale="en"
+  alternates={{ ja: `/cases/${slug}/`, en: `/en/cases/${slug}/` }}
 >
   <Breadcrumb
     items={[
-      { name: "モデルケース", path: "/cases/" },
+      { name: "Case Studies", path: "/en/cases/" },
       { name: entry.data.title },
     ]}
+    locale="en"
   />
   <Section>
-    <p class="text-sm font-bold text-brand-600">モデルケース</p>
+    <p class="text-sm font-bold text-brand-600">Case Study</p>
     <h1 class="mt-2 max-w-3xl text-2xl font-bold text-slate-900 sm:text-3xl">
       {entry.data.title}
     </h1>
     <div class="mt-4 flex flex-wrap gap-2 text-xs">
       <span class="rounded-full bg-brand-100 px-2.5 py-0.5 font-bold text-brand-800">
-        {INDUSTRY_LABELS[entry.data.industry]}
+        {industryLabels[entry.data.industry]}
       </span>
       {
         entry.data.automation.map((a) => (
           <span class="rounded-full bg-slate-100 px-2.5 py-0.5 text-slate-600">
-            {AUTOMATION_LABELS[a]}
+            {automationLabels[a]}
           </span>
         ))
       }
@@ -66,13 +63,17 @@ const alternates = hasEnglish
     {
       entry.data.is_model_case && (
         <div class="mt-6">
-          <ModelCaseNote />
+          <ModelCaseNote locale="en" />
         </div>
       )
     }
 
     <div class="mt-8">
-      <BeforeAfter before={entry.data.before} after={entry.data.after} />
+      <BeforeAfter
+        before={entry.data.before}
+        after={entry.data.after}
+        locale="en"
+      />
     </div>
 
     <article class="prose prose-slate mt-10 max-w-3xl">
@@ -81,24 +82,24 @@ const alternates = hasEnglish
 
     <div class="mt-10 grid gap-4 sm:grid-cols-3">
       <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
-        <p class="text-xs font-bold text-slate-500">実現の根拠（使用技術）</p>
+        <p class="text-xs font-bold text-slate-500">How it's built</p>
         <ul class="mt-2 space-y-1 text-sm text-slate-700">
-          {entry.data.tech.map((t) => <li>・{t}</li>)}
+          {entry.data.tech.map((t) => <li>· {t}</li>)}
         </ul>
       </div>
       <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
-        <p class="text-xs font-bold text-slate-500">開発期間</p>
+        <p class="text-xs font-bold text-slate-500">Timeline</p>
         <p class="mt-2 text-sm text-slate-700">{entry.data.period}</p>
       </div>
       {
         entry.data.price_range && (
           <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <p class="text-xs font-bold text-slate-500">費用の目安</p>
+            <p class="text-xs font-bold text-slate-500">Estimated cost</p>
             <p class="mt-2 text-sm text-slate-700">{entry.data.price_range}</p>
           </div>
         )
       }
     </div>
   </Section>
-  <Cta />
+  <Cta locale="en" />
 </Base>

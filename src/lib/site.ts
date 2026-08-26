@@ -8,6 +8,9 @@ export const GOOGLE_FORM_URL =
   "https://docs.google.com/forms/d/e/PLACEHOLDER/viewform";
 export const GOOGLE_FORM_EMBED_URL = `${GOOGLE_FORM_URL}?embedded=true`;
 
+// TODO: 英語版の問い合わせ導線が決まり次第差し替える（Google Form の英語版 or 専用アドレス）
+export const CONTACT_EMAIL = "hello@techvit.me";
+
 export const NAV_ITEMS = [
   { href: "/automation/", label: "業務自動化" },
   { href: "/cases/", label: "モデルケース" },

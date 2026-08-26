@@ -1,0 +1,35 @@
+---
+title: "Automating Inquiry Email Triage and Draft Replies (Sales Team)"
+industry: sales
+automation: [mail, sales]
+before:
+  - { step: "Read each inbound email and sort it by type", minutes: 30 }
+  - { step: "Draft replies to routine inquiries", minutes: 40 }
+  - { step: "Log the interaction in the tracking sheet", minutes: 20 }
+after:
+  - { step: "Review the AI's classification and draft reply, then send", minutes: 12 }
+  - { step: "Confirm the auto-logged tracking sheet entry", minutes: 3 }
+tech:
+  - "Claude API (email classification and reply drafting)"
+  - "Gmail / Outlook integration"
+  - "Automatic logging to the tracking spreadsheet"
+period: "About 3 weeks"
+price_range: "PoC: ¥100,000–300,000"
+is_model_case: true
+published: true
+date: 2026-08-10
+---
+
+## The scenario
+
+A sales team receives 30–50 emails a day between website inquiries and requests from existing clients. Triage and routine replies eat 90 minutes daily, and logging the interaction tends to get pushed to "later" — which often means never.
+
+## What gets automated
+
+Inbound email is classified by AI into categories (quote request, spec question, sales pitch, other), and a reply draft is written in a tone matched to the category. The interaction is logged to the tracking sheet automatically. A person always reviews the content before anything is sent.
+
+## Why it works
+
+- 90 minutes of daily triage and drafting becomes a 15-minute review
+- Fewer missed replies and faster first response times
+- Logging gaps disappear, so the tracking sheet always reflects current status

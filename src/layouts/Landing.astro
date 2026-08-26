@@ -1,15 +1,19 @@
 ---
 import Base from "@/layouts/Base.astro";
-import { serviceJsonLd } from "@/lib/seo";
+import type { Locale } from "@/lib/i18n";
+import { type Alternates, serviceJsonLd } from "@/lib/seo";
 
 interface Props {
   title: string;
   description: string;
   ogTitle?: string;
   ogImage?: string;
+  locale?: Locale;
+  alternates?: Alternates;
 }
 
-const { title, description, ogTitle, ogImage } = Astro.props;
+const { title, description, ogTitle, ogImage, locale, alternates } =
+  Astro.props;
 const jsonLd = [serviceJsonLd({ name: title, description })];
 ---
 
@@ -19,6 +23,8 @@ const jsonLd = [serviceJsonLd({ name: title, description })];
   ogTitle={ogTitle}
   ogImage={ogImage}
   jsonLd={jsonLd}
+  locale={locale}
+  alternates={alternates}
 >
   <slot />
 </Base>

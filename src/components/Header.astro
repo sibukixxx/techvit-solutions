@@ -1,15 +1,30 @@
 ---
-import { NAV_ITEMS, SITE_NAME } from "@/lib/site";
+import { type Locale, NAV_ITEMS_BY_LOCALE, t } from "@/lib/i18n";
+import { SITE_NAME } from "@/lib/site";
+
+interface Props {
+  locale?: Locale;
+  /** 相手言語版へのリンク先。省略時はトップページ同士を結ぶ */
+  switchHref?: string;
+}
+
+const { locale = "ja", switchHref } = Astro.props;
+const dict = t(locale);
+const navItems = NAV_ITEMS_BY_LOCALE[locale];
+const homeHref = locale === "en" ? "/en/" : "/";
+const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
+const resolvedSwitchHref = switchHref ?? (locale === "en" ? "/" : "/en/");
+const switchLabel = locale === "en" ? "日本語" : "EN";
 ---
 
 <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-    <a href="/" class="text-lg font-bold tracking-tight text-brand-900">
+    <a href={homeHref} class="text-lg font-bold tracking-tight text-brand-900">
       {SITE_NAME}
     </a>
     <nav class="flex items-center gap-1 sm:gap-2">
       {
-        NAV_ITEMS.map((item) => (
+        navItems.map((item) => (
           <a
             href={item.href}
             class="hidden rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 sm:block"
@@ -19,10 +34,16 @@ import { NAV_ITEMS, SITE_NAME } from "@/lib/site";
         ))
       }
       <a
-        href="/contact/"
+        href={resolvedSwitchHref}
+        class="hidden rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900 sm:block"
+      >
+        {switchLabel}
+      </a>
+      <a
+        href={contactHref}
         class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-700"
       >
-        無料相談
+        {dict.consultCta}
       </a>
     </nav>
   </div>

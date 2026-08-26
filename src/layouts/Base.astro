@@ -1,8 +1,11 @@
 ---
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
+import type { Locale } from "@/lib/i18n";
 import {
+  type Alternates,
   absoluteUrl,
+  alternateLinks,
   buildDescription,
   buildTitle,
   organizationJsonLd,
@@ -17,19 +20,32 @@ interface Props {
   ogImage?: string;
   /** 追加の JSON-LD（Service など） */
   jsonLd?: Record<string, unknown>[];
+  locale?: Locale;
+  /** 言語ペアが存在するページのみ指定する（例: { ja: "/pricing/", en: "/en/pricing/" }） */
+  alternates?: Alternates;
 }
 
-const { title, description, ogTitle, ogImage, jsonLd = [] } = Astro.props;
+const {
+  title,
+  description,
+  ogTitle,
+  ogImage,
+  jsonLd = [],
+  locale = "ja",
+  alternates,
+} = Astro.props;
 
 const pageTitle = buildTitle(title);
 const pageDescription = buildDescription(description);
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImageUrl = absoluteUrl(ogImage ?? "/og-default.png");
 const jsonLdList = [organizationJsonLd(), ...jsonLd];
+const ogLocale = locale === "en" ? "en_US" : "ja_JP";
+const alternateHreflangs = alternates ? alternateLinks(alternates) : [];
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -39,6 +55,11 @@ const jsonLdList = [organizationJsonLd(), ...jsonLd];
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      alternateHreflangs.map((l) => (
+        <link rel="alternate" hreflang={l.hreflang} href={l.href} />
+      ))
+    }
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -48,7 +69,7 @@ const jsonLdList = [organizationJsonLd(), ...jsonLd];
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:locale" content={ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={ogTitle ?? pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
@@ -65,10 +86,10 @@ const jsonLdList = [organizationJsonLd(), ...jsonLd];
     }
   </head>
   <body class="flex min-h-screen flex-col">
-    <Header />
+    <Header locale={locale} />
     <main class="flex-1">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>

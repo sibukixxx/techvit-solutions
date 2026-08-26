@@ -1,0 +1,35 @@
+---
+title: "Automating HS Code Lookup and Precedent Search (Trading Company)"
+industry: trade
+automation: [pdf, search]
+before:
+  - { step: "Check item specs and research HS code candidates", minutes: 40 }
+  - { step: "Search shared folders for similar past cases", minutes: 30 }
+  - { step: "Organize rationale and get manager sign-off", minutes: 20 }
+after:
+  - { step: "Enter item details; review AI-suggested codes, rationale, and precedents", minutes: 10 }
+  - { step: "Get manager sign-off on the confirmed code", minutes: 10 }
+tech:
+  - "Claude API (candidate classification and rationale extraction)"
+  - "Vector search over the tariff schedule and classification precedents"
+  - "Indexing of internal past cases"
+period: "About 6 weeks (2-week assessment + 1-month PoC)"
+price_range: "PoC: ¥100,000–300,000"
+is_model_case: true
+published: true
+date: 2026-08-01
+---
+
+## The scenario
+
+A trading company handling roughly 100 items per month needs to classify each one with an HS code. The lookup relies entirely on one experienced staff member's judgment, and past similar cases sit buried in a shared folder no one can search.
+
+## What gets automated
+
+The team enters an item's name, specification, and material. The AI proposes HS code candidates with cited rationale drawn from the tariff schedule and past classification precedents, and surfaces similar past cases from the company's own archive side by side. **The final code is always confirmed by a person.**
+
+## Why it works
+
+- AI handles the candidate research, cutting lookup time from ~90 minutes to ~20 minutes per item
+- Every suggestion shows its source, so the workflow doubles as an audit trail
+- Past-case search drops to seconds, letting new staff draw on a veteran's judgment history
