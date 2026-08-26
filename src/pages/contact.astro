@@ -1,4 +1,5 @@
 ---
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
 import { GOOGLE_FORM_EMBED_URL, GOOGLE_FORM_URL } from "@/lib/site";
@@ -8,6 +9,7 @@ import { GOOGLE_FORM_EMBED_URL, GOOGLE_FORM_URL } from "@/lib/site";
   title="無料相談"
   description="業務自動化の無料相談フォーム。「うちの業務でもできる？」の段階で大丈夫です。1営業日以内に返信します。"
 >
+  <Breadcrumb items={[{ name: "無料相談" }]} />
   <Section
     title="無料相談"
     lead="「うちの業務でもできる？」「いくらかかる？」の段階で大丈夫です。現状の手作業を教えていただければ、1営業日以内に返信します。"

@@ -37,3 +37,22 @@ export function serviceJsonLd(opts: { name: string; description: string }) {
     areaServed: "JP",
   };
 }
+
+export type BreadcrumbItem = {
+  name: string;
+  /** サイトルートからの相対パス（例: "/automation/pdf/"）。末尾はトップ（現在地）のみ省略可 */
+  path?: string;
+};
+
+export function breadcrumbJsonLd(items: BreadcrumbItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      ...(item.path ? { item: absoluteUrl(item.path) } : {}),
+    })),
+  };
+}

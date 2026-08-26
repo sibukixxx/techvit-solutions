@@ -1,4 +1,5 @@
 ---
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
@@ -8,6 +9,7 @@ import Base from "@/layouts/Base.astro";
   title="開発者について"
   description="TechVit Solutionsは、相談を受けた本人が設計して作る業務自動化サービスです。営業と開発者の間で話が食い違う、ということがありません。"
 >
+  <Breadcrumb items={[{ name: "開発者について" }]} />
   <Section title="開発者について">
     <div class="max-w-3xl space-y-6 text-slate-700">
       <p class="text-xl font-bold text-slate-900">

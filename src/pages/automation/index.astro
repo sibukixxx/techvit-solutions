@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
@@ -14,6 +15,7 @@ const automations = (
   title="業務自動化メニュー"
   description="PDF・文書、Excel・事務、メール、営業、バックオフィス、社内AI検索。AIで自動化できる業務の一覧です。"
 >
+  <Breadcrumb items={[{ name: "業務自動化" }]} />
   <Section
     title="業務自動化メニュー"
     lead="毎月くり返している手作業は、ほとんどが自動化の候補です。心当たりのある業務からご覧ください。"
