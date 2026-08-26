@@ -1,4 +1,5 @@
 ---
+import { type Locale, t } from "@/lib/i18n";
 import {
   formatMinutes,
   reductionRate,
@@ -12,9 +13,12 @@ interface Props {
   after: Step[];
   /** 「1回あたり」「月あたり」など、削減時間の単位の補足 */
   unit?: string;
+  locale?: Locale;
 }
 
-const { before, after, unit = "1回あたり" } = Astro.props;
+const { before, after, unit, locale = "ja" } = Astro.props;
+const dict = t(locale);
+const resolvedUnit = unit ?? dict.savedTimeUnit;
 
 const beforeTotal = totalMinutes(before);
 const afterTotal = totalMinutes(after);
@@ -25,49 +29,49 @@ const rate = reductionRate(before, after);
 <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
   <div class="grid gap-px overflow-hidden rounded-t-xl bg-slate-200 sm:grid-cols-2">
     <div class="bg-slate-50 p-5">
-      <p class="text-sm font-bold text-slate-500">Before（手作業）</p>
+      <p class="text-sm font-bold text-slate-500">{dict.beforeLabel}</p>
       <ul class="mt-3 space-y-2">
         {
           before.map((s) => (
             <li class="flex items-baseline justify-between gap-3 text-sm">
               <span class="text-slate-700">{s.step}</span>
               <span class="shrink-0 font-mono text-slate-500">
-                {formatMinutes(s.minutes)}
+                {formatMinutes(s.minutes, locale)}
               </span>
             </li>
           ))
         }
       </ul>
       <p class="mt-4 border-t border-slate-200 pt-3 text-right text-sm font-bold text-slate-700">
-        合計 {formatMinutes(beforeTotal)}
+        {dict.totalLabel} {formatMinutes(beforeTotal, locale)}
       </p>
     </div>
     <div class="bg-brand-50 p-5">
-      <p class="text-sm font-bold text-brand-700">After（自動化後）</p>
+      <p class="text-sm font-bold text-brand-700">{dict.afterLabel}</p>
       <ul class="mt-3 space-y-2">
         {
           after.map((s) => (
             <li class="flex items-baseline justify-between gap-3 text-sm">
               <span class="text-slate-700">{s.step}</span>
               <span class="shrink-0 font-mono text-slate-500">
-                {formatMinutes(s.minutes)}
+                {formatMinutes(s.minutes, locale)}
               </span>
             </li>
           ))
         }
       </ul>
       <p class="mt-4 border-t border-brand-100 pt-3 text-right text-sm font-bold text-brand-700">
-        合計 {formatMinutes(afterTotal)}
+        {dict.totalLabel} {formatMinutes(afterTotal, locale)}
       </p>
     </div>
   </div>
   <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-1 rounded-b-xl bg-brand-900 px-5 py-4 text-white">
     <p class="text-sm">
-      {unit}の削減時間
+      {dict.savedTimeLine(resolvedUnit)}
     </p>
     <p class="text-2xl font-bold">
-      −{formatMinutes(saved)}
-      <span class="ml-2 text-base font-bold text-accent-400">（{rate}%削減）</span>
+      −{formatMinutes(saved, locale)}
+      <span class="ml-2 text-base font-bold text-accent-400">{dict.reductionLine(rate)}</span>
     </p>
   </div>
 </div>

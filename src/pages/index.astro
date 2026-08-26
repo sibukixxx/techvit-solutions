@@ -11,7 +11,12 @@ import { INDUSTRY_LABELS } from "@/lib/site";
 const automations = (
   await getCollection("automation", (e) => e.data.published)
 ).sort((a, b) => a.data.order - b.data.order);
-const cases = (await getCollection("cases", (e) => e.data.published))
+const cases = (
+  await getCollection(
+    "cases",
+    (e) => e.data.published && !e.id.startsWith("en/"),
+  )
+)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
 
@@ -34,7 +39,7 @@ const plans = [
 ];
 ---
 
-<Base>
+<Base alternates={{ ja: "/", en: "/en/" }}>
   <!-- ファーストビュー -->
   <section class="bg-gradient-to-b from-brand-950 to-brand-900 text-white">
     <div class="mx-auto max-w-6xl px-4 py-20 sm:py-28">

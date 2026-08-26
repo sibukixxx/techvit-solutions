@@ -42,6 +42,18 @@ src/
 - 削減時間は frontmatter の `before` / `after` から自動算出する（手入力しない）
 - 技術スタック名は主役にせず、「Before → After → 削減時間」の後に「実現の根拠」として置く
 
+## 英語ページ（/en/）
+
+海外案件・海外プラットフォーム向けの実績提示を目的に、`/en/` 配下に英語ページを追加している（全ページ対訳ではなく、海外営業に必要なページのみ）。設計の全体像は `docs/i18n-en-plan.md` を参照。
+
+- **ルーティング**: `/en/` サブディレクトリ。日本語ページのURLは一切変更していない
+- **コンテンツ**: `src/content/cases/en/<slug>.mdx` のようにロケールサブフォルダ＋同名ファイルで英語版を管理する。同名ファイルの有無が言語ペアの対応表を兼ねる（`src/lib/i18n.ts` の `localeOfId` / `stripLocalePrefix` 参照）
+- **UI文字列辞書**: `src/lib/i18n.ts` の `t(locale)` に集約。共通コンポーネント（Header/Footer/Cta/ModelCaseNote/Breadcrumb/BeforeAfter/Base/Landing）は `locale?: Locale`（デフォルト `"ja"`）を受け取り、省略時は既存の日本語ページと同じ出力になる
+- **hreflang**: 言語ペアが実在するページだけ `Base` に `alternates={{ ja: "...", en: "..." }}` を渡す（`src/lib/seo.ts` の `alternateLinks`）。ペアがないページ（例: `/en/services/` は日本語側が automation 6ページに分割されており1:1対応がないため）には付けない
+- **`/en/services/`** は automation 6ページの内容を1ページに集約したダイジェスト（Content Collections ではなく手書きの `.astro`）。個別ページの翻訳は Phase 2
+- **`/en/contact/`** は英語版 Google Form が無いため、`CONTACT_EMAIL`（`src/lib/site.ts`、プレースホルダ）への `mailto:` リンクにしている。英語フォームができ次第差し替える
+- **新しい日本語コンテンツを追加/更新したら**: 対応する `en/` ファイルがあれば同じPRで更新する（翻訳ドリフト防止）
+
 ## SEO
 
 - `Base.astro`: title / description / canonical / robots / OGP（画像サイズ付き）/ Twitter Card / Organization JSON-LD を共通出力
@@ -89,3 +101,5 @@ git commit -m "ci: enable GitHub Actions workflow" && git push
 - [ ] カスタムドメイン `solutions.techvit.me` の割り当て
 - [ ] デプロイ後、Search Console にプロパティ登録 → `sitemap-index.xml` を送信、Analytics（GA4 など）タグを `Base.astro` に追加
 - [ ] 削減時間シミュレーター island（M6、React + TanStack Form）
+- [ ] `CONTACT_EMAIL`（`src/lib/site.ts`）を実際に受信できるアドレスに差し替え、または英語版 Google Form を用意して `/en/contact/` を切り替え
+- [ ] Phase 2: `/en/industry/trade/`（貿易LP英語版）と automation 6ページの個別英訳（`docs/i18n-en-plan.md` §3, §7 参照）

@@ -1,0 +1,54 @@
+---
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Cta from "@/components/Cta.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+---
+
+<Base
+  title="About"
+  description="TechVit Solutions is an automation service where the person you talk to also designs and builds it — so there's never a gap between sales and engineering."
+  locale="en"
+  alternates={{ ja: "/about/", en: "/en/about/" }}
+>
+  <Breadcrumb items={[{ name: "About" }]} locale="en" />
+  <Section title="About">
+    <div class="max-w-3xl space-y-6 text-slate-700">
+      <p class="text-xl font-bold text-slate-900">
+        The person you talk to is the person who designs and builds it.
+      </p>
+      <p>
+        TechVit Solutions is a one-person automation practice run by a software engineer.
+        You won't need to re-explain your situation to a salesperson, a consultant, and then
+        an engineering team. The same person handles everything from the first free
+        consultation through design, development, and post-launch tuning.
+      </p>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="font-bold text-slate-900">Why that matters</h2>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li>· No game of telephone, so things move fast</li>
+          <li>· No large-team overhead, so pricing stays lean</li>
+          <li>· Support doesn't end at delivery — the same person is there after launch too</li>
+        </ul>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">Focus areas</h2>
+        <p class="mt-2">
+          Designing and building business systems powered by AI (LLMs) — particularly making
+          PDFs and internal documents searchable, automating Excel-based workflows, handling
+          email, and AI-OCR for back-office paperwork. In short: eliminating the manual work
+          you repeat every month.
+        </p>
+      </div>
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">How we work</h2>
+        <ul class="mt-2 space-y-2">
+          <li>· Start small, confirm the impact with real numbers, then expand</li>
+          <li>· Never hand everything to AI — a human review step always stays in the loop</li>
+          <li>· If something can't be done, or the payoff looks small, we say so upfront</li>
+        </ul>
+      </div>
+    </div>
+  </Section>
+  <Cta locale="en" />
+</Base>

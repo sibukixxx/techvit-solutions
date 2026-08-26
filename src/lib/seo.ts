@@ -1,3 +1,4 @@
+import type { Locale } from "./i18n";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
 
 export function buildTitle(title?: string): string {
@@ -55,4 +56,24 @@ export function breadcrumbJsonLd(items: BreadcrumbItem[]) {
       ...(item.path ? { item: absoluteUrl(item.path) } : {}),
     })),
   };
+}
+
+/** 言語ペアのパス。存在するロケールの分だけ指定する（例: { ja: "/pricing/", en: "/en/pricing/" }） */
+export type Alternates = Partial<Record<Locale, string>>;
+
+export function alternateLinks(
+  alternates: Alternates,
+): { hreflang: Locale | "x-default"; href: string }[] {
+  const entries = Object.entries(alternates) as [Locale, string][];
+  const links: { hreflang: Locale | "x-default"; href: string }[] = entries.map(
+    ([locale, path]) => ({
+      hreflang: locale,
+      href: absoluteUrl(path),
+    }),
+  );
+  const xDefaultPath = alternates.ja ?? alternates.en;
+  if (xDefaultPath) {
+    links.push({ hreflang: "x-default", href: absoluteUrl(xDefaultPath) });
+  }
+  return links;
 }

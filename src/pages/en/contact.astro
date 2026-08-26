@@ -1,0 +1,44 @@
+---
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Button from "@/components/ui/Button.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+import { CONTACT_EMAIL } from "@/lib/site";
+
+const mailtoHref = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+  "Free consultation request — TechVit Solutions",
+)}`;
+---
+
+<Base
+  title="Contact"
+  description="Get in touch for a free consultation on automating your team's manual work. It's fine to reach out even at the 'could this work for us?' stage — we reply within 1 business day."
+  locale="en"
+  alternates={{ ja: "/contact/", en: "/en/contact/" }}
+>
+  <Breadcrumb items={[{ name: "Contact" }]} locale="en" />
+  <Section
+    title="Free Consultation"
+    lead="It's fine to reach out at the 'could this work for us?' or 'roughly what would this cost?' stage. Tell us about your current manual process and we'll reply within 1 business day."
+  >
+    <div class="max-w-2xl rounded-xl border border-slate-200 bg-white p-8">
+      <p class="text-slate-700">
+        Email us with a short description of the manual work you're dealing with — what it is,
+        roughly how much time it takes, and any tools you're currently using. That's enough for
+        us to get started.
+      </p>
+      <div class="mt-6">
+        <Button href={mailtoHref} size="lg">
+          Email us: {CONTACT_EMAIL}
+        </Button>
+      </div>
+      <p class="mt-6 text-sm text-slate-500">
+        Prefer a web form? Our{" "}
+        <a href="/contact/" class="font-bold text-brand-600 underline hover:text-brand-700">
+          Japanese-language contact form
+        </a>{" "}
+        also reaches the same inbox.
+      </p>
+    </div>
+  </Section>
+</Base>

@@ -1,3 +1,5 @@
+import type { Locale } from "./i18n";
+
 export type Step = {
   step: string;
   minutes: number;
@@ -17,10 +19,15 @@ export function reductionRate(before: Step[], after: Step[]): number {
   return Math.round((savedMinutes(before, after) / b) * 100);
 }
 
-/** 90 → 「1時間30分」 / 45 → 「45分」 */
-export function formatMinutes(minutes: number): string {
+/** 90 → 「1時間30分」/ "1h 30m"、45 → 「45分」/ "45m" */
+export function formatMinutes(minutes: number, locale: Locale = "ja"): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
+  if (locale === "en") {
+    if (h === 0) return `${m}m`;
+    if (m === 0) return `${h}h`;
+    return `${h}h ${m}m`;
+  }
   if (h === 0) return `${m}分`;
   if (m === 0) return `${h}時間`;
   return `${h}時間${m}分`;
