@@ -15,13 +15,30 @@ TechVit Solutions のサービスサイト（https://solutions.techvit.me）。
 
 ## 開発
 
+必要なツール:
+
+- Node.js 22 または 24（推奨バージョンは `.node-version` を参照）
+- pnpm 10（`corepack enable` で有効化可能）
+- GNU Make
+
 ```bash
-pnpm install
-pnpm dev        # 開発サーバー
-pnpm build      # 本番ビルド → dist/
-pnpm check      # 型チェック（astro check）
-pnpm lint       # Biome
+make setup      # 環境確認 + 依存関係のインストール
+make dev        # 開発サーバー
 ```
+
+よく使うコマンドは Makefile にまとめています。
+
+```bash
+make help         # コマンド一覧
+make check        # lint + 型チェック + フォーマット確認
+make format       # 自動フォーマット
+make build        # 本番ビルド → dist/
+make preview      # 本番ビルドをローカルで確認
+make ci           # 依存関係の再現 + 全チェック + ビルド
+make clean        # dist/ と .astro/ を削除
+```
+
+個別の `pnpm dev`、`pnpm build` なども引き続き利用できます。
 
 ## ディレクトリ
 
