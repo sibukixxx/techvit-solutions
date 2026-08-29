@@ -6,6 +6,11 @@ const stepSchema = z.object({
   minutes: z.number(),
 });
 
+const faqSchema = z.object({
+  question: z.string(),
+  answer: z.string(),
+});
+
 const automation = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/automation" }),
   schema: z.object({
@@ -16,6 +21,7 @@ const automation = defineCollection({
     before: z.array(stepSchema),
     after: z.array(stepSchema),
     related_cases: z.array(z.string()).default([]),
+    faq: z.array(faqSchema).default([]),
     order: z.number().default(99),
     published: z.boolean().default(true),
   }),
@@ -50,6 +56,7 @@ const cases = defineCollection({
     tech: z.array(z.string()),
     period: z.string(),
     price_range: z.string().optional(),
+    faq: z.array(faqSchema).default([]),
     is_model_case: z.boolean().default(true),
     published: z.boolean().default(true),
     date: z.coerce.date(),

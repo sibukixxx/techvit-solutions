@@ -10,6 +10,7 @@ import {
   AUTOMATION_LABELS_BY_LOCALE,
   INDUSTRY_LABELS_BY_LOCALE,
 } from "@/lib/i18n";
+import { faqJsonLd } from "@/lib/seo";
 
 export async function getStaticPaths() {
   const cases = await getCollection(
@@ -27,6 +28,7 @@ const { Content } = await render(entry);
 const slug = entry.id.slice(3);
 const industryLabels = INDUSTRY_LABELS_BY_LOCALE.en;
 const automationLabels = AUTOMATION_LABELS_BY_LOCALE.en;
+const jsonLd = entry.data.faq.length > 0 ? [faqJsonLd(entry.data.faq)] : [];
 ---
 
 <Base
@@ -34,6 +36,7 @@ const automationLabels = AUTOMATION_LABELS_BY_LOCALE.en;
   description={`${entry.data.title} — a model case with Before / After time comparisons, the technology behind it, and the build timeline.`}
   locale="en"
   alternates={{ ja: `/cases/${slug}/`, en: `/en/cases/${slug}/` }}
+  jsonLd={jsonLd}
 >
   <Breadcrumb
     items={[
@@ -100,6 +103,22 @@ const automationLabels = AUTOMATION_LABELS_BY_LOCALE.en;
         )
       }
     </div>
+
+    {
+      entry.data.faq.length > 0 && (
+        <div class="mt-10">
+          <p class="text-xs font-bold text-slate-500">FAQ</p>
+          <div class="mt-4 space-y-4">
+            {entry.data.faq.map((item) => (
+              <div class="rounded-lg border border-slate-200 bg-slate-50 p-6">
+                <p class="font-bold text-slate-900">{item.question}</p>
+                <p class="mt-2 text-sm text-slate-700">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </Section>
   <Cta locale="en" />
 </Base>
