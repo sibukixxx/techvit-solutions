@@ -6,6 +6,7 @@ import Cta from "@/components/Cta.astro";
 import ModelCaseNote from "@/components/ModelCaseNote.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+import { faqJsonLd } from "@/lib/seo";
 import { AUTOMATION_LABELS, INDUSTRY_LABELS } from "@/lib/site";
 
 export async function getStaticPaths() {
@@ -32,12 +33,14 @@ const { Content } = await render(entry);
 const alternates = hasEnglish
   ? { ja: `/cases/${entry.id}/`, en: `/en/cases/${entry.id}/` }
   : undefined;
+const jsonLd = entry.data.faq.length > 0 ? [faqJsonLd(entry.data.faq)] : [];
 ---
 
 <Base
   title={entry.data.title}
   description={`${entry.data.title}のモデルケース。Before / After と削減時間、使用技術、開発期間を紹介します。`}
   alternates={alternates}
+  jsonLd={jsonLd}
 >
   <Breadcrumb
     items={[
@@ -99,6 +102,22 @@ const alternates = hasEnglish
         )
       }
     </div>
+
+    {
+      entry.data.faq.length > 0 && (
+        <div class="mt-10">
+          <p class="text-xs font-bold text-slate-500">よくある質問</p>
+          <div class="mt-4 space-y-4">
+            {entry.data.faq.map((item) => (
+              <div class="rounded-lg border border-slate-200 bg-slate-50 p-6">
+                <p class="font-bold text-slate-900">{item.question}</p>
+                <p class="mt-2 text-sm text-slate-700">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </Section>
   <Cta />
 </Base>
