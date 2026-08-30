@@ -15,36 +15,121 @@ const homeHref = locale === "en" ? "/en/" : "/";
 const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
 const resolvedSwitchHref = switchHref ?? (locale === "en" ? "/" : "/en/");
 const switchLabel = locale === "en" ? "日本語" : "EN";
+const menuLabel = locale === "en" ? "Toggle menu" : "メニューを開閉";
 ---
 
 <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
-  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
     <a href={homeHref} class="text-lg font-bold tracking-tight text-brand-900">
       {SITE_NAME}
     </a>
-    <nav class="flex items-center gap-1 sm:gap-2">
-      {
-        navItems.map((item) => (
-          <a
-            href={item.href}
-            class="hidden rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 sm:block"
-          >
-            {item.label}
-          </a>
-        ))
-      }
-      <a
-        href={resolvedSwitchHref}
-        class="hidden rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900 sm:block"
-      >
-        {switchLabel}
-      </a>
+    <div class="flex items-center gap-1 md:gap-2">
+      <nav aria-label="Main" class="hidden items-center gap-1 md:flex lg:gap-2">
+        {
+          navItems.map((item) => (
+            <a
+              href={item.href}
+              class="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <a
+          href={resolvedSwitchHref}
+          class="rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+        >
+          {switchLabel}
+        </a>
+      </nav>
       <a
         href={contactHref}
-        class="rounded-lg bg-brand-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-700"
+        class="rounded-lg bg-brand-600 px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-brand-700 sm:px-4"
       >
         {dict.consultCta}
       </a>
-    </nav>
+      <button
+        type="button"
+        id="menu-button"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label={menuLabel}
+        class="group -mr-1 rounded-md p-2 text-slate-700 hover:bg-slate-100 md:hidden"
+      >
+        <svg
+          class="size-6 group-aria-expanded:hidden"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M4 6.5h16M4 12h16M4 17.5h16" />
+        </svg>
+        <svg
+          class="hidden size-6 group-aria-expanded:block"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
   </div>
+
+  <nav
+    id="mobile-menu"
+    aria-label="Main"
+    hidden
+    class="border-t border-slate-200 px-4 py-2 md:hidden"
+  >
+    <ul>
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="block rounded-md px-2 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="mt-1 border-t border-slate-200 pt-1">
+        <a
+          href={resolvedSwitchHref}
+          class="block rounded-md px-2 py-3 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+        >
+          {locale === "en" ? "日本語" : "English"}
+        </a>
+      </li>
+    </ul>
+  </nav>
 </header>
+
+<script>
+  const button = document.getElementById("menu-button");
+  const menu = document.getElementById("mobile-menu");
+
+  if (button && menu) {
+    const setOpen = (open: boolean) => {
+      button.setAttribute("aria-expanded", String(open));
+      menu.hidden = !open;
+    };
+
+    button.addEventListener("click", () => setOpen(menu.hidden));
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !menu.hidden) {
+        setOpen(false);
+        button.focus();
+      }
+    });
+  }
+</script>
