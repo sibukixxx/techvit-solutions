@@ -10,6 +10,8 @@ const { locale = "ja" } = Astro.props;
 const dict = t(locale);
 const navItems = NAV_ITEMS_BY_LOCALE[locale];
 const contactHref = locale === "en" ? "/en/contact/" : "/contact/";
+const extraLinks =
+  locale === "ja" ? [{ href: "/downloads/", label: "資料ダウンロード" }] : [];
 const year = new Date().getFullYear();
 ---
 
@@ -34,7 +36,7 @@ const year = new Date().getFullYear();
       </div>
       <nav class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
         {
-          [...navItems, { href: contactHref, label: dict.consultCta }].map(
+          [...navItems, ...extraLinks, { href: contactHref, label: dict.consultCta }].map(
             (item) => (
               <a
                 href={item.href}

@@ -2,11 +2,18 @@
 import { getCollection } from "astro:content";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
+import DownloadPdf from "@/components/DownloadPdf.astro";
 import PricingLadder from "@/components/PricingLadder.astro";
 import ServiceCard from "@/components/ServiceCard.astro";
 import Button from "@/components/ui/Button.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+import {
+  DOWNLOADS_PATH,
+  OVERVIEW_PDF_PATH,
+  OVERVIEW_PDF_TITLE,
+  pdfFilename,
+} from "@/lib/downloads";
 import { plans } from "@/lib/plans";
 import { getServicesByKind } from "@/lib/services";
 
@@ -33,6 +40,17 @@ const ongoing = plans("ja").find((p) => p.recurring);
         技術ではなく、業務の時間で提案します。まずは3〜5万円のAI業務診断か、1〜2週間で作る小さなツール1つから。
         効果を数字で確認してから、主力サービスの本開発に進めます。
       </p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <DownloadPdf
+          href={OVERVIEW_PDF_PATH}
+          filename={pdfFilename(OVERVIEW_PDF_TITLE)}
+          variant="light"
+          label="サービス総合資料をダウンロード"
+        />
+        <a href={DOWNLOADS_PATH} class="text-sm text-brand-200 hover:text-white hover:underline">
+          サービス別の資料一覧 →
+        </a>
+      </div>
     </div>
   </div>
 
