@@ -1,0 +1,86 @@
+---
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Cta from "@/components/Cta.astro";
+import DownloadPdf from "@/components/DownloadPdf.astro";
+import Section from "@/components/ui/Section.astro";
+import Base from "@/layouts/Base.astro";
+import {
+  OVERVIEW_PDF_PATH,
+  OVERVIEW_PDF_TITLE,
+  PDF_VERSION,
+  pdfFilename,
+  servicePdfPath,
+} from "@/lib/downloads";
+import { getServicesByKind } from "@/lib/services";
+import { SERVICE_KIND_LABELS } from "@/lib/site";
+
+const { core, entry } = await getServicesByKind();
+const services = [...entry, ...core];
+---
+
+<Base
+  title="資料ダウンロード"
+  description="TechVit Solutions のサービス資料（PDF）。全サービスをまとめた総合資料と、AI業務診断・小さな業務ツール・ナレッジ検索・営業支援・ドキュメント業務の各サービス資料を、登録不要でダウンロードできます。社内共有・稟議にお使いください。"
+>
+  <Breadcrumb items={[{ name: "資料ダウンロード" }]} />
+
+  <div class="bg-brand-950 text-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <p class="text-sm font-bold text-brand-300">資料ダウンロード</p>
+      <h1 class="mt-2 text-3xl font-bold sm:text-4xl">サービス資料（PDF）</h1>
+      <p class="mt-4 max-w-2xl text-brand-100">
+        登録不要でダウンロードできます。社内での共有・稟議・相見積りの資料としてお使いください。
+        内容はWebの各ページと同じで、料金・進め方・Before / After・モデルケースをA4数ページにまとめています。
+      </p>
+    </div>
+  </div>
+
+  <Section
+    title="まずはこの1冊"
+    lead="5つのサービス・自動化できる6つの業務・料金・モデルケースを1つにまとめた総合資料です。初めての方はこちらから。"
+  >
+    <div class="flex flex-col gap-4 rounded-xl border border-brand-200 bg-brand-50 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h3 class="text-lg font-bold text-slate-900">{OVERVIEW_PDF_TITLE}</h3>
+        <p class="mt-1 text-sm text-slate-600">
+          考え方 / サービス一覧 / 自動化できる業務 / 進め方と料金 / モデルケース（{PDF_VERSION}）
+        </p>
+      </div>
+      <DownloadPdf
+        href={OVERVIEW_PDF_PATH}
+        filename={pdfFilename(OVERVIEW_PDF_TITLE)}
+        label="総合資料をダウンロード"
+      />
+    </div>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section
+      title="サービス別の資料"
+      lead="検討中のサービスが決まっている場合はこちら。各サービスの課題・Before / After・お渡しするもの・料金・FAQ をまとめています。"
+    >
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {
+          services.map((s) => (
+            <li class="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6">
+              <p class="text-xs font-bold text-brand-600">{SERVICE_KIND_LABELS[s.data.kind]}</p>
+              <h3 class="mt-1 text-lg font-bold text-slate-900">{s.data.title}</h3>
+              <p class="mt-2 flex-1 text-sm text-slate-600">{s.data.lead}</p>
+              <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                <DownloadPdf href={servicePdfPath(s.id)} filename={pdfFilename(s.data.short)} />
+                <a href={`/services/${s.id}/`} class="text-sm text-slate-600 hover:underline">
+                  Webで見る →
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-6 text-xs text-slate-500">
+        料金・内容は各資料の発行時点のものです。最新の情報はWebの各ページをご覧ください。
+      </p>
+    </Section>
+  </div>
+
+  <Cta />
+</Base>

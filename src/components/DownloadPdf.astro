@@ -1,0 +1,53 @@
+---
+/**
+ * 営業資料（PDF）のダウンロードボタン。
+ * variant: primary=白地ボタン / light=濃色背景（ヒーロー）用 / link=テキストリンク
+ */
+interface Props {
+  href: string;
+  /** download 属性に入れる保存時のファイル名 */
+  filename: string;
+  label?: string;
+  variant?: "primary" | "light" | "link";
+  class?: string;
+}
+
+const {
+  href,
+  filename,
+  label = "資料をPDFでダウンロード",
+  variant = "primary",
+  class: className = "",
+} = Astro.props;
+
+const variantClass = {
+  primary:
+    "rounded-lg border border-brand-200 bg-white px-5 py-2.5 text-sm text-brand-700 shadow-sm hover:bg-brand-50",
+  light:
+    "rounded-lg border border-white/30 bg-white/10 px-5 py-2.5 text-sm text-white hover:bg-white/20",
+  link: "text-sm text-brand-600 hover:underline",
+}[variant];
+---
+
+<a
+  href={href}
+  download={filename}
+  type="application/pdf"
+  class:list={["inline-flex items-center gap-2 font-bold transition", variantClass, className]}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 20 20"
+    fill="currentColor"
+    class="h-4 w-4 shrink-0"
+    aria-hidden="true"
+  >
+    <path
+      fill-rule="evenodd"
+      d="M10 3a.75.75 0 0 1 .75.75v6.638l1.96-2.158a.75.75 0 1 1 1.08 1.04l-3.25 3.5a.75.75 0 0 1-1.08 0l-3.25-3.5a.75.75 0 1 1 1.08-1.04l1.96 2.158V3.75A.75.75 0 0 1 10 3Zm-6.25 9.5a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h9.5a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 14.75 17h-9.5A2.25 2.25 0 0 1 3 14.75v-1.5a.75.75 0 0 1 .75-.75Z"
+      clip-rule="evenodd"
+    />
+  </svg>
+  <span>{label}</span>
+  <span class="text-xs font-normal opacity-70">PDF</span>
+</a>

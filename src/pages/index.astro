@@ -1,12 +1,18 @@
 ---
 import { getCollection } from "astro:content";
 import Cta from "@/components/Cta.astro";
+import DownloadPdf from "@/components/DownloadPdf.astro";
 import PricingLadder from "@/components/PricingLadder.astro";
 import ServiceCard from "@/components/ServiceCard.astro";
 import Button from "@/components/ui/Button.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+import {
+  OVERVIEW_PDF_PATH,
+  OVERVIEW_PDF_TITLE,
+  pdfFilename,
+} from "@/lib/downloads";
 import { formatMinutes, savedMinutes } from "@/lib/reduction";
 import { getServicesByKind } from "@/lib/services";
 import { INDUSTRY_LABELS } from "@/lib/site";
@@ -59,8 +65,14 @@ const cases = (
     <div class="mt-3 grid gap-6 lg:grid-cols-3">
       {core.map((s) => <ServiceCard service={s} />)}
     </div>
-    <div class="mt-8">
+    <div class="mt-8 flex flex-wrap items-center gap-4">
       <Button href="/services/" variant="secondary">サービス一覧へ</Button>
+      <DownloadPdf
+        href={OVERVIEW_PDF_PATH}
+        filename={pdfFilename(OVERVIEW_PDF_TITLE)}
+        variant="link"
+        label="サービス総合資料をダウンロード"
+      />
     </div>
   </Section>
 

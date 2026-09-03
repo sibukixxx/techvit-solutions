@@ -3,12 +3,14 @@ import { getEntry, render } from "astro:content";
 import BeforeAfter from "@/components/BeforeAfter.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
+import DownloadPdf from "@/components/DownloadPdf.astro";
 import ModelCaseNote from "@/components/ModelCaseNote.astro";
 import PricingLadder from "@/components/PricingLadder.astro";
 import Button from "@/components/ui/Button.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Landing from "@/layouts/Landing.astro";
+import { DOWNLOADS_PATH, pdfFilename, servicePdfPath } from "@/lib/downloads";
 import { formatMinutes, savedMinutes } from "@/lib/reduction";
 import { faqJsonLd } from "@/lib/seo";
 import { getServices } from "@/lib/services";
@@ -38,6 +40,8 @@ const relatedCases = (
 
 const hasBeforeAfter = data.before.length > 0 && data.after.length > 0;
 const jsonLd = data.faq.length > 0 ? [faqJsonLd(data.faq)] : [];
+const pdfHref = servicePdfPath(entry.id);
+const pdfName = pdfFilename(data.short);
 ---
 
 <Landing title={data.title} description={data.description} jsonLd={jsonLd}>
@@ -73,6 +77,9 @@ const jsonLd = data.faq.length > 0 ? [faqJsonLd(data.faq)] : [];
           </p>
         )
       }
+      <div class="mt-6">
+        <DownloadPdf href={pdfHref} filename={pdfName} variant="light" label="この資料をPDFでダウンロード" />
+      </div>
     </div>
   </div>
 
@@ -218,6 +225,20 @@ const jsonLd = data.faq.length > 0 ? [faqJsonLd(data.faq)] : [];
       </Section>
     )
   }
+
+  <div class="bg-slate-50">
+    <Section
+      title="社内での共有・稟議に"
+      lead="このページの内容（課題・Before / After・お渡しするもの・料金・FAQ）をA4数ページのPDFにまとめています。登録不要でダウンロードできます。"
+    >
+      <div class="flex flex-wrap items-center gap-4">
+        <DownloadPdf href={pdfHref} filename={pdfName} label={`${data.short}の資料をダウンロード`} />
+        <a href={DOWNLOADS_PATH} class="text-sm text-slate-600 hover:underline">
+          他のサービス資料・総合資料はこちら →
+        </a>
+      </div>
+    </Section>
+  </div>
 
   <Cta />
 </Landing>
