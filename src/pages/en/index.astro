@@ -6,6 +6,7 @@ import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
 import { INDUSTRY_LABELS_BY_LOCALE } from "@/lib/i18n";
+import { plans as plansByLocale } from "@/lib/plans";
 import { formatMinutes, savedMinutes } from "@/lib/reduction";
 
 const cases = (
@@ -19,23 +20,7 @@ const cases = (
 
 const industryLabels = INDUSTRY_LABELS_BY_LOCALE.en;
 
-const plans = [
-  {
-    name: "Automation Assessment",
-    price: "$250–450",
-    body: "We map out your current manual work and put together a report on what can be automated, how much, and for roughly what cost.",
-  },
-  {
-    name: "PoC (Pilot)",
-    price: "$850–2,600",
-    body: "We pick the one task with the biggest payoff and build a working prototype against your real data to measure the actual time saved.",
-  },
-  {
-    name: "Full Build",
-    price: "From $2,600",
-    body: "We turn the validated PoC into something your team uses daily, including existing-tool upgrades.",
-  },
-];
+const plans = plansByLocale("en");
 
 const services = [
   {
@@ -74,7 +59,7 @@ const services = [
 <Base
   locale="en"
   title="AI Automation for Your Manual Work"
-  description="TechVit Solutions automates the manual work you repeat every month — PDF search, Excel entry, email handling, invoice processing — with AI. Assessments start at $250; designed and built by the person you talk to."
+  description="TechVit Solutions automates the manual work you repeat every month — internal knowledge search, sales prep, document drafting, invoice processing — with AI. Assessments start at $250; designed, built, and maintained by the person you talk to."
   alternates={{ ja: "/", en: "/en/" }}
 >
   <!-- Hero -->
@@ -99,19 +84,20 @@ const services = [
     </div>
   </section>
 
-  <!-- 3-step offer -->
+  <!-- 4-step offer -->
   <Section
     title="Start small, expand once you've seen it work"
-    lead="We don't recommend jumping straight to a full build. Assessment → Pilot → Full build — each step's price is on the table upfront."
+    lead="We don't recommend jumping straight to a full build. Assessment → Pilot → Full build → Ongoing support — each step's price is on the table upfront."
   >
-    <div class="grid gap-6 sm:grid-cols-3">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {
-        plans.map((plan, i) => (
-          <Card>
-            <p class="text-sm font-bold text-brand-600">STEP {i + 1}</p>
+        plans.map((plan) => (
+          <Card class={plan.recurring ? "border-brand-200 bg-brand-50/40" : ""}>
+            <p class="text-sm font-bold text-brand-600">{plan.step}</p>
             <h3 class="mt-1 text-lg font-bold text-slate-900">{plan.name}</h3>
             <p class="mt-1 text-2xl font-bold text-slate-900">{plan.price}</p>
-            <p class="mt-3 text-sm text-slate-600">{plan.body}</p>
+            <p class="text-xs text-slate-500">{plan.period}</p>
+            <p class="mt-3 text-sm text-slate-600">{plan.summary}</p>
           </Card>
         ))
       }

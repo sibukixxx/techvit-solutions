@@ -1,0 +1,42 @@
+---
+import Card from "@/components/ui/Card.astro";
+import type { ServiceEntry } from "@/lib/services";
+
+interface Props {
+  service: ServiceEntry;
+  /** 見出しの階層（トップ=h3、一覧=h2） */
+  headingLevel?: "h2" | "h3";
+}
+
+const { service, headingLevel = "h3" } = Astro.props;
+const Heading = headingLevel;
+const { data } = service;
+---
+
+<Card href={`/services/${service.id}/`} class="flex h-full flex-col">
+  <div class="flex flex-wrap items-center gap-2">
+    {
+      data.badge && (
+        <span class="rounded-full bg-accent-500 px-2.5 py-0.5 text-xs font-bold text-brand-950">
+          {data.badge}
+        </span>
+      )
+    }
+    {
+      data.price && (
+        <span class="text-xs font-bold text-slate-500">
+          {data.price}
+          {data.period && <span class="font-normal">・{data.period}</span>}
+        </span>
+      )
+    }
+    {
+      !data.price && data.period && (
+        <span class="text-xs text-slate-500">{data.period}</span>
+      )
+    }
+  </div>
+  <Heading class="mt-2 text-lg font-bold text-slate-900">{data.title}</Heading>
+  <p class="mt-2 flex-1 text-sm text-slate-600">{data.lead}</p>
+  <p class="mt-4 text-sm font-bold text-brand-600">詳しく見る →</p>
+</Card>

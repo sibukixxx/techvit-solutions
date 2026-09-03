@@ -2,39 +2,59 @@
 import { getCollection } from "astro:content";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
+import Button from "@/components/ui/Button.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+import { serviceMapByAutomation } from "@/lib/services";
 
 const automations = (
   await getCollection("automation", (e) => e.data.published)
 ).sort((a, b) => a.data.order - b.data.order);
+const serviceOf = await serviceMapByAutomation();
 ---
 
 <Base
   title="業務自動化メニュー"
-  description="PDF・文書、Excel・事務、メール、営業、バックオフィス、社内AI検索。AIで自動化できる業務の一覧です。"
+  description="PDF・文書、Excel・事務、メール、営業、バックオフィス、社内AI検索。AIで自動化できる業務の一覧です。各業務は、ナレッジ検索・営業支援・ドキュメント業務のいずれかのサービスに含まれます。"
 >
   <Breadcrumb items={[{ name: "業務自動化" }]} />
   <Section
     title="業務自動化メニュー"
-    lead="毎月くり返している手作業は、ほとんどが自動化の候補です。心当たりのある業務からご覧ください。"
+    lead="毎月くり返している手作業は、ほとんどが自動化の候補です。心当たりのある業務からご覧ください。各業務は、いずれかのサービスに含まれます。"
   >
     <div class="grid gap-6 sm:grid-cols-2">
       {
-        automations.map((entry) => (
-          <Card href={`/automation/${entry.id}/`}>
-            <h2 class="text-xl font-bold text-slate-900">{entry.data.title}</h2>
-            <p class="mt-2 text-sm text-slate-600">{entry.data.lead}</p>
-            <ul class="mt-4 space-y-1">
-              {entry.data.pains.slice(0, 2).map((pain) => (
-                <li class="text-sm text-slate-500">・{pain}</li>
-              ))}
-            </ul>
-            <p class="mt-4 text-sm font-bold text-brand-600">詳しく見る →</p>
-          </Card>
-        ))
+        automations.map((entry) => {
+          const service = serviceOf.get(entry.id);
+          return (
+            <Card href={`/automation/${entry.id}/`}>
+              {service && (
+                <p class="text-xs font-bold text-brand-600">
+                  サービス: {service.data.short}
+                </p>
+              )}
+              <h2 class="mt-1 text-xl font-bold text-slate-900">{entry.data.title}</h2>
+              <p class="mt-2 text-sm text-slate-600">{entry.data.lead}</p>
+              <ul class="mt-4 space-y-1">
+                {entry.data.pains.slice(0, 2).map((pain) => (
+                  <li class="text-sm text-slate-500">・{pain}</li>
+                ))}
+              </ul>
+              <p class="mt-4 text-sm font-bold text-brand-600">詳しく見る →</p>
+            </Card>
+          );
+        })
       }
+    </div>
+    <div class="mt-10 rounded-xl border border-slate-200 bg-slate-50 p-6">
+      <h2 class="font-bold text-slate-900">「何を売るか」の単位で見るなら</h2>
+      <p class="mt-2 text-sm text-slate-600">
+        ここでは「どの作業が軽くなるか」で分けています。「まず何から頼めばいいか」「いくらで・どう進むか」は、サービス一覧からご覧ください。
+      </p>
+      <div class="mt-4">
+        <Button href="/services/" variant="secondary">サービス一覧へ</Button>
+      </div>
     </div>
   </Section>
   <Cta />

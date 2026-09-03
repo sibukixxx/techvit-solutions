@@ -4,62 +4,26 @@ import Cta from "@/components/Cta.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+import { plans as plansByLocale } from "@/lib/plans";
 
-const plans = [
-  {
-    step: "STEP 1",
-    name: "Automation Assessment",
-    price: "$250–450",
-    period: "1–2 weeks",
-    items: [
-      "Interview and map out your current manual work",
-      "Separate what can be automated from what can't",
-      "A report estimating time saved and cost",
-    ],
-    note: "You're welcome to take just the report and use it for internal discussion.",
-  },
-  {
-    step: "STEP 2",
-    name: "PoC (Pilot)",
-    price: "$850–2,600",
-    period: "2 weeks – 1 month",
-    items: [
-      "Pick the one task with the biggest payoff",
-      "Build a working prototype against real data",
-      "Measure actual time saved and quote the full build",
-    ],
-    note: "Learning “it saves less than we thought” is a valid PoC outcome too — stopping here is fine.",
-  },
-  {
-    step: "STEP 3",
-    name: "Full Build",
-    price: "From $2,600",
-    period: "1–3 months",
-    items: [
-      "Turn the validated PoC into something used daily",
-      "Includes error handling, review flow, and handoff docs",
-      "One month of post-launch tuning included",
-    ],
-    note: "Varies with scope. Quoted as a fixed price based on the PoC results.",
-  },
-];
+const plans = plansByLocale("en");
 ---
 
 <Base
   title="Pricing"
-  description="Automation assessment from $250, PoC from $850, full build from $2,600. A 3-step pricing model that lets you test before you commit. Existing-tool upgrades welcome."
+  description="AI workflow assessment from $250, PoC from $850, full build from $2,600, ongoing support from $450/mo. A 4-step pricing model that lets you test before you commit. Small single-purpose tools and existing-tool upgrades welcome."
   locale="en"
   alternates={{ ja: "/pricing/", en: "/en/pricing/" }}
 >
   <Breadcrumb items={[{ name: "Pricing" }]} locale="en" />
   <Section
     title="Pricing"
-    lead="We don't recommend jumping straight to a full build. Each step's price and deliverable is on the table upfront, and you decide whether to continue after each one."
+    lead="We don't recommend jumping straight to a full build. Assessment → Pilot → Full build → Ongoing support: each step's price and deliverable is on the table upfront, and you decide whether to continue after each one. Every service follows the same four steps."
   >
-    <div class="grid gap-6 lg:grid-cols-3">
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
       {
         plans.map((plan) => (
-          <Card>
+          <Card class={plan.recurring ? "border-brand-200 bg-brand-50/40" : ""}>
             <p class="text-sm font-bold text-brand-600">{plan.step}</p>
             <h2 class="mt-1 text-xl font-bold text-slate-900">{plan.name}</h2>
             <p class="mt-2 text-3xl font-bold text-slate-900">{plan.price}</p>
@@ -75,12 +39,25 @@ const plans = [
       }
     </div>
 
-    <div class="mt-10 rounded-xl border border-slate-200 bg-slate-50 p-6">
-      <h2 class="text-lg font-bold text-slate-900">Existing tool upgrades</h2>
-      <p class="mt-2 max-w-3xl text-sm text-slate-600">
-        We also take on requests like “the macro/script someone built for us stopped working” or
-        “we want to add AI to a tool we already have.” We'll review it and quote separately.
-      </p>
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="text-lg font-bold text-slate-900">Small single-purpose tools</h2>
+        <p class="mt-2 text-sm text-slate-600">
+          One problem, one screen, built for your team in 1–2 weeks: PDF diff, FAQ generation,
+          outreach email drafting, quote generation, and the like. Quoted individually once we
+          hear the problem.
+        </p>
+        <a href="/en/services/#tools" class="mt-3 inline-block text-sm font-bold text-brand-600 hover:underline">
+          See examples →
+        </a>
+      </div>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="text-lg font-bold text-slate-900">Existing tool upgrades</h2>
+        <p class="mt-2 text-sm text-slate-600">
+          We also take on requests like “the macro/script someone built for us stopped working” or
+          “we want to add AI to a tool we already have.” We'll review it and quote separately.
+        </p>
+      </div>
     </div>
   </Section>
   <Cta locale="en" />

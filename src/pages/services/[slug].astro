@@ -1,0 +1,223 @@
+---
+import { getEntry, render } from "astro:content";
+import BeforeAfter from "@/components/BeforeAfter.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Cta from "@/components/Cta.astro";
+import ModelCaseNote from "@/components/ModelCaseNote.astro";
+import PricingLadder from "@/components/PricingLadder.astro";
+import Button from "@/components/ui/Button.astro";
+import Card from "@/components/ui/Card.astro";
+import Section from "@/components/ui/Section.astro";
+import Landing from "@/layouts/Landing.astro";
+import { formatMinutes, savedMinutes } from "@/lib/reduction";
+import { faqJsonLd } from "@/lib/seo";
+import { getServices } from "@/lib/services";
+import { INDUSTRY_LABELS, SERVICE_KIND_LABELS } from "@/lib/site";
+
+export async function getStaticPaths() {
+  const services = await getServices();
+  return services.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const automations = (
+  await Promise.all(data.automations.map((id) => getEntry("automation", id)))
+)
+  .filter((a) => a?.data.published)
+  .sort((a, b) => (a?.data.order ?? 99) - (b?.data.order ?? 99));
+
+const relatedCases = (
+  await Promise.all(data.related_cases.map((id) => getEntry("cases", id)))
+).filter((c) => c?.data.published);
+
+const hasBeforeAfter = data.before.length > 0 && data.after.length > 0;
+const jsonLd = data.faq.length > 0 ? [faqJsonLd(data.faq)] : [];
+---
+
+<Landing title={data.title} description={data.description} jsonLd={jsonLd}>
+  <Breadcrumb
+    items={[{ name: "サービス", path: "/services/" }, { name: data.title }]}
+  />
+
+  <div class="bg-gradient-to-b from-brand-950 to-brand-900 text-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <div class="flex flex-wrap items-center gap-2 text-sm font-bold">
+        <span class="text-brand-300">サービス｜{SERVICE_KIND_LABELS[data.kind]}</span>
+        {
+          data.badge && (
+            <span class="rounded-full bg-accent-500 px-2.5 py-0.5 text-xs text-brand-950">
+              {data.badge}
+            </span>
+          )
+        }
+      </div>
+      <h1 class="mt-2 max-w-3xl text-3xl font-bold leading-tight sm:text-4xl">
+        {data.title}
+      </h1>
+      <p class="mt-4 max-w-2xl text-lg text-brand-100">{data.lead}</p>
+      {
+        (data.price || data.period) && (
+          <p class="mt-6 inline-flex flex-wrap items-baseline gap-x-4 rounded-lg bg-white/10 px-4 py-2 text-sm">
+            {data.price && (
+              <span>
+                料金 <span class="text-xl font-bold">{data.price}</span>
+              </span>
+            )}
+            {data.period && <span>期間の目安 {data.period}</span>}
+          </p>
+        )
+      }
+    </div>
+  </div>
+
+  <Section title="こんな会社・部門に">
+    <ul class="grid gap-3 sm:grid-cols-3">
+      {
+        data.audience.map((a) => (
+          <li class="rounded-lg border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-slate-800">
+            {a}
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section title="こんな状態に心当たりはありませんか？">
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {
+          data.pains.map((pain) => (
+            <li class="rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-700">
+              {pain}
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+  </div>
+
+  {
+    hasBeforeAfter && (
+      <Section
+        title="Before → After（作業時間の例）"
+        lead="導入した場合の作業時間のイメージです。実際の診断では、貴社の業務で試算します。"
+      >
+        <BeforeAfter before={data.before} after={data.after} unit={data.unit} />
+      </Section>
+    )
+  }
+
+  <div class:list={[hasBeforeAfter && "bg-slate-50"]}>
+    <Section title="できるようになること・お渡しするもの">
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {
+          data.outcomes.map((o) => (
+            <li class="flex gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
+              <span class="font-bold text-brand-600">✓</span>
+              <span>{o}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+  </div>
+
+  <Section>
+    <article class="prose prose-slate max-w-3xl">
+      <Content />
+    </article>
+  </Section>
+
+  {
+    automations.length > 0 && (
+      <div class="bg-slate-50">
+        <Section
+          title="対象となる業務"
+          lead="このサービスで自動化する業務の詳細です。業務ごとの Before / After を確認できます。"
+        >
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {automations.map((a) => {
+              if (!a) return null;
+              return (
+                <Card href={`/automation/${a.id}/`}>
+                  <h3 class="font-bold text-slate-900">{a.data.title}</h3>
+                  <p class="mt-2 text-sm text-slate-600">{a.data.lead}</p>
+                  <p class="mt-4 text-sm font-bold text-brand-600">詳しく見る →</p>
+                </Card>
+              );
+            })}
+          </div>
+        </Section>
+      </div>
+    )
+  }
+
+  <Section
+    title="進め方と料金"
+    lead={
+      data.kind === "entry"
+        ? "このサービスは入口です。効果が見えたら、PoC → 本開発 → 運用・改善へ同じ担当者が引き継ぎます。"
+        : "診断 → PoC → 本開発 → 運用・改善の4ステップで進めます。各段階の金額を先に提示し、次に進むかはその都度ご判断ください。"
+    }
+  >
+    <PricingLadder />
+    <div class="mt-8">
+      <Button href="/pricing/" variant="secondary">料金の詳細を見る</Button>
+    </div>
+  </Section>
+
+  {
+    relatedCases.length > 0 && (
+      <div class="bg-slate-50">
+        <Section title="関連するモデルケース">
+          <div class="grid gap-6 sm:grid-cols-2">
+            {relatedCases.map((c) => {
+              if (!c) return null;
+              const saved = savedMinutes(c.data.before, c.data.after);
+              return (
+                <Card href={`/cases/${c.id}/`}>
+                  <p class="text-xs font-bold text-slate-500">
+                    {INDUSTRY_LABELS[c.data.industry]}
+                  </p>
+                  <h3 class="mt-1 font-bold text-slate-900">{c.data.title}</h3>
+                  <p class="mt-3 text-sm text-slate-600">
+                    1回あたり
+                    <span class="ml-1 text-xl font-bold text-brand-700">
+                      −{formatMinutes(saved)}
+                    </span>
+                  </p>
+                </Card>
+              );
+            })}
+          </div>
+          <div class="mt-6">
+            <ModelCaseNote />
+          </div>
+        </Section>
+      </div>
+    )
+  }
+
+  {
+    data.faq.length > 0 && (
+      <Section title="よくある質問">
+        <div class="space-y-4">
+          {data.faq.map((item) => (
+            <div class="rounded-lg border border-slate-200 bg-slate-50 p-6">
+              <p class="font-bold text-slate-900">{item.question}</p>
+              <p class="mt-2 text-sm text-slate-700">{item.answer}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <Cta />
+</Landing>

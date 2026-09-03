@@ -3,24 +3,51 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+
+const roles = [
+  {
+    role: "営業・課題整理",
+    body: "業務を見せていただき、どこに時間がかかっているかを一緒に整理します",
+  },
+  {
+    role: "設計",
+    body: "AIに任せる部分と人が確認する部分を分けて、仕組みを設計します",
+  },
+  { role: "実装", body: "AIを組み込んだ業務システム・ツールを自分で作ります" },
+  {
+    role: "クラウド導入",
+    body: "社内で使える形でクラウドに載せ、運用できる状態にします",
+  },
+  {
+    role: "効果測定",
+    body: "削減時間や回答精度を数字で測り、効果を確認します",
+  },
+  {
+    role: "改善",
+    body: "業務の変化やAIの更新に合わせて、導入後も同じ人が直します",
+  },
+];
 ---
 
 <Base
   title="開発者について"
-  description="TechVit Solutionsは、相談を受けた本人が設計して作る業務自動化サービスです。営業と開発者の間で話が食い違う、ということがありません。"
+  description="TechVit Solutionsは、相談を受けた本人が営業・設計・開発・運用まで一人で担当する業務自動化サービスです。営業と開発者の間で話が食い違う、ということがありません。"
   alternates={{ ja: "/about/", en: "/en/about/" }}
 >
   <Breadcrumb items={[{ name: "開発者について" }]} />
   <Section title="開発者について">
-    <div class="max-w-3xl space-y-6 text-slate-700">
-      <p class="text-xl font-bold text-slate-900">
-        相談した本人が、設計して、作ります。
-      </p>
-      <p>
-        TechVit Solutions は、ソフトウェアエンジニアが個人で運営する業務自動化サービスです。
-        営業担当・コンサルタント・開発チームと何度も同じ説明をする必要はありません。
-        最初の無料相談から設計・開発・導入後の調整まで、すべて同じ人間が担当します。
-      </p>
+    <div class="max-w-3xl space-y-8 text-slate-700">
+      <div class="space-y-4">
+        <p class="text-xl font-bold text-slate-900">
+          相談した本人が、設計して、作って、運用します。
+        </p>
+        <p>
+          TechVit Solutions は、ソフトウェアエンジニアが個人で運営する業務自動化サービスです。
+          営業担当・コンサルタント・開発チームと何度も同じ説明をする必要はありません。
+          最初の無料相談から設計・開発・導入後の改善まで、すべて同じ人間が担当します。
+        </p>
+      </div>
+
       <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
         <h2 class="font-bold text-slate-900">この形の良いところ</h2>
         <ul class="mt-3 space-y-2 text-sm">
@@ -29,17 +56,40 @@ import Base from "@/layouts/Base.astro";
           <li>・「作って終わり」ではなく、導入後も同じ人に相談できる</li>
         </ul>
       </div>
+
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">一人で担当する範囲</h2>
+        <p class="mt-2">
+          AIによって、一人が担当できる範囲は広がっています。以前は営業・PM・エンジニア・運用と複数人が必要だった仕事を、
+          調査・企画・実装の一部をAIに任せながら、一人で最後まで持ちます。
+        </p>
+        <dl class="mt-4 grid gap-3 sm:grid-cols-2">
+          {
+            roles.map((r) => (
+              <div class="rounded-lg border border-slate-200 bg-white px-4 py-3">
+                <dt class="text-sm font-bold text-brand-700">{r.role}</dt>
+                <dd class="mt-1 text-sm text-slate-600">{r.body}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
       <div>
         <h2 class="text-lg font-bold text-slate-900">得意領域</h2>
         <p class="mt-2">
           AI（LLM）を組み込んだ業務システムの設計・開発。
-          特に、PDF・文書の検索可能化、Excel業務の自動化、メール処理、AI-OCRによる帳票処理など、
+          特に、社内文書を検索して根拠つきで回答する仕組み、営業前の調査・営業文作成の自動化、
+          報告書・見積書などのドキュメント作成、AI-OCRによる帳票処理など、
           「毎月くり返す手作業」をなくす仕組みづくりを得意としています。
+          貿易・輸出入（HSコード調査・輸出入書類）や製造業の現場業務にも取り組んでいます。
         </p>
       </div>
+
       <div>
         <h2 class="text-lg font-bold text-slate-900">進め方のポリシー</h2>
         <ul class="mt-2 space-y-2">
+          <li>・技術ではなく「どの業務が何時間減るか」で提案する</li>
           <li>・小さく試して、効果を数字で確認してから広げる</li>
           <li>・AIに全部任せず、人が確認するフローを必ず残す</li>
           <li>・できないこと・効果が薄いことは、最初にそう言う</li>

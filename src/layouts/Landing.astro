@@ -10,11 +10,20 @@ interface Props {
   ogImage?: string;
   locale?: Locale;
   alternates?: Alternates;
+  /** Service JSON-LD に加えて出力する JSON-LD（FAQ など） */
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title, description, ogTitle, ogImage, locale, alternates } =
-  Astro.props;
-const jsonLd = [serviceJsonLd({ name: title, description })];
+const {
+  title,
+  description,
+  ogTitle,
+  ogImage,
+  locale,
+  alternates,
+  jsonLd: extraJsonLd = [],
+} = Astro.props;
+const jsonLd = [serviceJsonLd({ name: title, description }), ...extraJsonLd];
 ---
 
 <Base

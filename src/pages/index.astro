@@ -1,13 +1,17 @@
 ---
 import { getCollection } from "astro:content";
 import Cta from "@/components/Cta.astro";
+import PricingLadder from "@/components/PricingLadder.astro";
+import ServiceCard from "@/components/ServiceCard.astro";
 import Button from "@/components/ui/Button.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
 import { formatMinutes, savedMinutes } from "@/lib/reduction";
+import { getServicesByKind } from "@/lib/services";
 import { INDUSTRY_LABELS } from "@/lib/site";
 
+const { core, entry } = await getServicesByKind();
 const automations = (
   await getCollection("automation", (e) => e.data.published)
 ).sort((a, b) => a.data.order - b.data.order);
@@ -19,24 +23,6 @@ const cases = (
 )
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
-
-const plans = [
-  {
-    name: "自動化診断",
-    price: "3〜5万円",
-    body: "現状の手作業を棚卸しし、「何が・どれだけ・いくらで」自動化できるかをレポートにまとめます。",
-  },
-  {
-    name: "PoC（お試し導入）",
-    price: "10〜30万円",
-    body: "効果が大きい業務を1つ選び、実データで動く試作品を作って削減時間を実測します。",
-  },
-  {
-    name: "本開発",
-    price: "30万円〜",
-    body: "PoCで効果を確認した仕組みを、日常業務で使える形に仕上げて導入します。既存ツールの改修も対応。",
-  },
-];
 ---
 
 <Base alternates={{ ja: "/", en: "/en/" }}>
@@ -47,94 +33,102 @@ const plans = [
         その手作業、<br class="sm:hidden" />毎月何時間かかっていますか？
       </h1>
       <p class="mt-6 max-w-2xl text-lg text-brand-100">
-        PDF検索・Excel転記・メール処理・請求書入力。毎月くり返す手作業をAIで自動化します。
-        相談した本人が設計して作るから、話が早く、余計な費用がかかりません。
+        社内資料の検索、営業前の調査、報告書の作成、請求書の入力。毎月くり返す手作業をAIとソフトウェアで省力化します。
+        営業から設計・開発・運用まで、相談した本人が一人で担当するから、話が早く、余計な費用がかかりません。
       </p>
       <div class="mt-10 flex flex-wrap gap-4">
         <Button href="/contact/" size="lg" class="bg-accent-500 text-brand-950 hover:bg-accent-600">
           無料相談する
         </Button>
-        <Button href="/cases/" size="lg" variant="secondary">
-          削減時間のモデルケースを見る
+        <Button href="/services/" size="lg" variant="secondary">
+          サービス一覧を見る
         </Button>
       </div>
     </div>
   </section>
 
-  <!-- 商品3つ -->
+  <!-- サービス（売る単位） -->
   <Section
-    title="小さく試して、効果を見てから広げる"
-    lead="いきなり大きな開発は勧めません。診断 → お試し → 本開発の3ステップで、各段階の金額を先に提示します。"
+    title="何を提供するか"
+    lead="「AIを作ります」ではなく、「御社のこの業務を、これだけ減らします」の単位でご提案します。まずは診断か、小さなツール1つから。"
   >
-    <div class="grid gap-6 sm:grid-cols-3">
+    <div class="grid gap-6 sm:grid-cols-2">
+      {entry.map((s) => <ServiceCard service={s} />)}
+    </div>
+    <p class="mt-10 text-sm font-bold text-brand-600">業務を変える3つの主力サービス</p>
+    <div class="mt-3 grid gap-6 lg:grid-cols-3">
+      {core.map((s) => <ServiceCard service={s} />)}
+    </div>
+    <div class="mt-8">
+      <Button href="/services/" variant="secondary">サービス一覧へ</Button>
+    </div>
+  </Section>
+
+  <!-- 進め方と料金 -->
+  <div class="bg-slate-50">
+    <Section
+      title="小さく試して、効果を見てから広げる"
+      lead="いきなり大きな開発は勧めません。診断 → お試し → 本開発 → 運用・改善の4ステップで、各段階の金額を先に提示します。"
+    >
+      <PricingLadder />
+      <p class="mt-6 text-sm text-slate-500">
+        詳しくは<a href="/pricing/" class="text-brand-600 underline hover:text-brand-700">料金ページ</a>へ。
+      </p>
+    </Section>
+  </div>
+
+  <!-- 業務自動化メニュー -->
+  <Section
+    title="自動化できる業務から探す"
+    lead="「あ、それ毎月うちでやってる」と思ったら、その業務は自動化の候補です。業務ごとの Before / After をご覧ください。"
+  >
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        plans.map((plan, i) => (
-          <Card>
-            <p class="text-sm font-bold text-brand-600">STEP {i + 1}</p>
-            <h3 class="mt-1 text-lg font-bold text-slate-900">{plan.name}</h3>
-            <p class="mt-1 text-2xl font-bold text-slate-900">{plan.price}</p>
-            <p class="mt-3 text-sm text-slate-600">{plan.body}</p>
+        automations.map((entry) => (
+          <Card href={`/automation/${entry.id}/`}>
+            <h3 class="text-lg font-bold text-slate-900">
+              {entry.data.title}
+            </h3>
+            <p class="mt-2 text-sm text-slate-600">{entry.data.lead}</p>
+            <p class="mt-4 text-sm font-bold text-brand-600">詳しく見る →</p>
           </Card>
         ))
       }
     </div>
-    <p class="mt-6 text-sm text-slate-500">
-      詳しくは<a href="/pricing/" class="text-brand-600 underline hover:text-brand-700">料金ページ</a>へ。
-    </p>
   </Section>
 
-  <!-- 業務自動化メニュー -->
+  <!-- モデルケース -->
   <div class="bg-slate-50">
     <Section
-      title="何を自動化できるのか"
-      lead="「あ、それ毎月うちでやってる」と思ったら、その業務は自動化の候補です。"
+      title="削減時間のモデルケース"
+      lead="Before / After と削減時間で、導入効果のイメージをつかんでください。※いずれも導入効果のモデルケースです。"
     >
-      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-6 sm:grid-cols-3">
         {
-          automations.map((entry) => (
-            <Card href={`/automation/${entry.id}/`}>
-              <h3 class="text-lg font-bold text-slate-900">
-                {entry.data.title}
-              </h3>
-              <p class="mt-2 text-sm text-slate-600">{entry.data.lead}</p>
-              <p class="mt-4 text-sm font-bold text-brand-600">詳しく見る →</p>
-            </Card>
-          ))
+          cases.map((entry) => {
+            const saved = savedMinutes(entry.data.before, entry.data.after);
+            return (
+              <Card href={`/cases/${entry.id}/`}>
+                <p class="text-xs font-bold text-slate-500">
+                  {INDUSTRY_LABELS[entry.data.industry]}
+                </p>
+                <h3 class="mt-1 font-bold text-slate-900">{entry.data.title}</h3>
+                <p class="mt-3 text-sm text-slate-600">
+                  1回あたり
+                  <span class="ml-1 text-xl font-bold text-brand-700">
+                    −{formatMinutes(saved)}
+                  </span>
+                </p>
+              </Card>
+            );
+          })
         }
+      </div>
+      <div class="mt-8">
+        <Button href="/cases/" variant="secondary">モデルケース一覧へ</Button>
       </div>
     </Section>
   </div>
-
-  <!-- モデルケース -->
-  <Section
-    title="削減時間のモデルケース"
-    lead="Before / After と削減時間で、導入効果のイメージをつかんでください。※いずれも導入効果のモデルケースです。"
-  >
-    <div class="grid gap-6 sm:grid-cols-3">
-      {
-        cases.map((entry) => {
-          const saved = savedMinutes(entry.data.before, entry.data.after);
-          return (
-            <Card href={`/cases/${entry.id}/`}>
-              <p class="text-xs font-bold text-slate-500">
-                {INDUSTRY_LABELS[entry.data.industry]}
-              </p>
-              <h3 class="mt-1 font-bold text-slate-900">{entry.data.title}</h3>
-              <p class="mt-3 text-sm text-slate-600">
-                1回あたり
-                <span class="ml-1 text-xl font-bold text-brand-700">
-                  −{formatMinutes(saved)}
-                </span>
-              </p>
-            </Card>
-          );
-        })
-      }
-    </div>
-    <div class="mt-8">
-      <Button href="/cases/" variant="secondary">モデルケース一覧へ</Button>
-    </div>
-  </Section>
 
   <Cta />
 </Base>

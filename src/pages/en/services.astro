@@ -2,8 +2,63 @@
 import BeforeAfter from "@/components/BeforeAfter.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Cta from "@/components/Cta.astro";
+import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+
+/**
+ * Service menu (what we sell). Mirrors the Japanese /services/ collection as a digest;
+ * individual English service pages are Phase 2 (see docs/i18n-en-plan.md).
+ */
+const offers = [
+  {
+    kind: "Start here",
+    title: "AI Workflow Assessment",
+    price: "$250–450 · 1–2 weeks",
+    lead: "Don't buy a system yet. Let us watch your team work for about two hours; you get a report on what can be automated, in what order, and a proposal for one small pilot.",
+    href: "/en/pricing/",
+  },
+  {
+    kind: "Start here",
+    title: "Small Single-Purpose Tools",
+    price: "1–2 weeks",
+    lead: "One problem, one screen. PDF diff, FAQ generation, outreach drafting, quote generation, HS code lookup — built for your data and your formats.",
+    href: "#tools",
+  },
+  {
+    kind: "Core service",
+    title: "Internal Knowledge Search & Inquiry Response AI",
+    price: "Assessment → Pilot → Build → Support",
+    lead: "Cut the time spent hunting through PDFs, manuals, meeting notes, and past proposals — and the time spent writing replies. Ask a question, get the source, a draft answer, and the next action.",
+    href: "#pdf",
+  },
+  {
+    kind: "Core service",
+    title: "AI Sales Support System",
+    price: "Assessment → Pilot → Build → Support",
+    lead: "Account research, per-company outreach drafts, reply triage, follow-ups, CRM entry. Start with just “research 100 accounts and draft an email for each.”",
+    href: "#sales",
+  },
+  {
+    kind: "Core service",
+    title: "AI Document Workflow Automation",
+    price: "Assessment → Pilot → Build → Support",
+    lead: "Reports, quotes, applications, meeting minutes. Source material → AI analysis → draft → review → PDF → history. Turn an 8-hour monthly report into a 2-hour one.",
+    href: "#excel",
+  },
+];
+
+const tools = [
+  "PDF diff — list the changes between two versions of a contract or spec",
+  "FAQ generation — draft an FAQ from your inquiry history",
+  "Outreach email drafting — company name + URL in, research summary and email out",
+  "Account research — public-information company summaries",
+  "CSV analysis — sales or inventory data in, aggregation and commentary out",
+  "Quote generation — enter the conditions, get a quote PDF",
+  "HS code lookup support — candidate codes with cited grounds from item details",
+  "Inventory calculation — reorder points and safety stock",
+  "Market and review analysis — classify reviews and summarize the key points",
+];
 
 const services = [
   {
@@ -132,7 +187,7 @@ const services = [
 
 <Base
   title="What We Automate"
-  description="PDF search, Excel entry, email, sales prep, back-office invoice processing, and internal AI search — see what TechVit Solutions can automate for your team."
+  description="Five services — AI workflow assessment, small single-purpose tools, internal knowledge search, AI sales support, and document workflow automation — and the six workflows they automate."
   locale="en"
 >
   <Breadcrumb items={[{ name: "Services" }]} locale="en" />
@@ -140,17 +195,46 @@ const services = [
   <div class="bg-brand-950 text-white">
     <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
       <p class="text-sm font-bold text-brand-300">Services</p>
-      <h1 class="mt-2 text-3xl font-bold sm:text-4xl">What We Automate</h1>
+      <h1 class="mt-2 text-3xl font-bold sm:text-4xl">What We Offer, and What We Automate</h1>
       <p class="mt-4 max-w-2xl text-brand-100">
-        If any of the tasks below sound familiar, they're a strong candidate for automation.
-        We start with a paid assessment on the one task costing you the most time.
+        We sell outcomes on specific workflows, not “AI development.” Start with a paid
+        assessment or one small tool, confirm the impact in numbers, then move to a full build.
+      </p>
+    </div>
+  </div>
+
+  <Section
+    title="What we offer"
+    lead="Two entry points, three core services. Every service follows the same four steps: assessment → pilot → full build → ongoing support, with each step priced upfront."
+  >
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        offers.map((o) => (
+          <Card href={o.href} class="flex h-full flex-col">
+            <p class="text-xs font-bold text-brand-600">{o.kind}</p>
+            <h2 class="mt-1 text-lg font-bold text-slate-900">{o.title}</h2>
+            <p class="mt-1 text-xs text-slate-500">{o.price}</p>
+            <p class="mt-2 flex-1 text-sm text-slate-600">{o.lead}</p>
+            <p class="mt-4 text-sm font-bold text-brand-600">Learn more →</p>
+          </Card>
+        ))
+      }
+    </div>
+  </Section>
+
+  <div class="border-t border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-6xl px-4 pt-14 sm:pt-20">
+      <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">What we automate</h2>
+      <p class="mt-3 max-w-3xl text-slate-600">
+        The workflows below are what the core services are made of. If any of them sound
+        familiar, they're a strong candidate.
       </p>
     </div>
   </div>
 
   {
     services.map((s, i) => (
-      <div id={s.slug} class:list={["scroll-mt-16", i % 2 === 1 && "bg-slate-50"]}>
+      <div id={s.slug} class:list={["scroll-mt-16", i % 2 === 0 && "bg-slate-50"]}>
         <Section title={s.title} lead={s.lead}>
           <ul class="grid gap-3 sm:grid-cols-2">
             {s.pains.map((pain) => (
@@ -166,6 +250,27 @@ const services = [
       </div>
     ))
   }
+
+  <div id="tools" class="scroll-mt-16 bg-brand-50">
+    <Section
+      title="Small single-purpose tools"
+      lead="No need to spend six months on a big system. One problem, one screen, built for your team in 1–2 weeks. Examples of what we can build:"
+    >
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {
+          tools.map((t) => (
+            <li class="rounded-lg border border-brand-100 bg-white px-4 py-3 text-sm text-slate-700">
+              {t}
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-6 text-sm text-slate-600">
+        Quoted individually. Tell us the problem in a free consultation and we'll say on the spot
+        whether it's a 1–2 week build or something bigger.
+      </p>
+    </Section>
+  </div>
 
   <Cta locale="en" />
 </Base>

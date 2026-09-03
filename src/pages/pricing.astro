@@ -4,61 +4,27 @@ import Cta from "@/components/Cta.astro";
 import Card from "@/components/ui/Card.astro";
 import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
+import { plans } from "@/lib/plans";
 
-const plans = [
-  {
-    step: "STEP 1",
-    name: "自動化診断",
-    price: "3〜5万円",
-    period: "1〜2週間",
-    items: [
-      "現状の手作業のヒアリングと棚卸し",
-      "自動化できる業務・できない業務の切り分け",
-      "削減時間と費用の試算レポート",
-    ],
-    note: "レポートだけ受け取って社内検討に使っていただいても構いません。",
-  },
-  {
-    step: "STEP 2",
-    name: "PoC（お試し導入）",
-    price: "10〜30万円",
-    period: "2週間〜1ヶ月",
-    items: [
-      "効果が大きい業務を1つ選定",
-      "実データで動く試作品を構築",
-      "削減時間の実測と本開発の見積り",
-    ],
-    note: "「思ったより効果がない」と分かるのもPoCの成果です。ここで止めるのも自由です。",
-  },
-  {
-    step: "STEP 3",
-    name: "本開発",
-    price: "30万円〜",
-    period: "1〜3ヶ月",
-    items: [
-      "PoCで確認した仕組みを日常業務で使える形に",
-      "エラー処理・確認フロー・引き継ぎ資料まで含む",
-      "導入後1ヶ月の調整期間つき",
-    ],
-    note: "規模により変動します。PoCの結果をもとに固定金額でお見積りします。",
-  },
-];
+const list = plans("ja");
 ---
 
 <Base
   title="料金"
-  description="自動化診断3〜5万円、PoC 10〜30万円、本開発30万円〜。小さく試して効果を見てから進められる3ステップの料金体系です。既存ツールの改修も対応します。"
+  description="AI業務診断3〜5万円、PoC 10〜30万円、本開発30万円〜、運用・改善5〜20万円/月。小さく試して効果を見てから進められる4ステップの料金体系です。小さな業務ツール開発・既存ツールの改修も対応します。"
   alternates={{ ja: "/pricing/", en: "/en/pricing/" }}
 >
   <Breadcrumb items={[{ name: "料金" }]} />
   <Section
     title="料金"
-    lead="いきなり大きな開発は勧めません。各ステップで金額と成果物を先に提示し、次に進むかはその都度ご判断いただけます。"
+    lead="いきなり大きな開発は勧めません。診断 → PoC → 本開発 → 運用・改善の4ステップで、各段階の金額と成果物を先に提示し、次に進むかはその都度ご判断いただけます。どのサービスも同じ進め方です。"
   >
-    <div class="grid gap-6 lg:grid-cols-3">
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
       {
-        plans.map((plan) => (
-          <Card>
+        list.map((plan) => (
+          <Card
+            class={plan.recurring ? "border-brand-200 bg-brand-50/40" : ""}
+          >
             <p class="text-sm font-bold text-brand-600">{plan.step}</p>
             <h2 class="mt-1 text-xl font-bold text-slate-900">{plan.name}</h2>
             <p class="mt-2 text-3xl font-bold text-slate-900">{plan.price}</p>
@@ -74,11 +40,32 @@ const plans = [
       }
     </div>
 
-    <div class="mt-10 rounded-xl border border-slate-200 bg-slate-50 p-6">
-      <h2 class="text-lg font-bold text-slate-900">既存ツールの改修</h2>
-      <p class="mt-2 max-w-3xl text-sm text-slate-600">
-        「前に作ってもらったマクロ・スクリプトが動かなくなった」「今あるツールにAIを組み込みたい」といったご相談も承ります。内容を拝見して個別にお見積りします。
-      </p>
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="text-lg font-bold text-slate-900">小さな業務ツール開発</h2>
+        <p class="mt-2 text-sm text-slate-600">
+          「1つの問題を1画面で解決する」規模のツールを、1〜2週間で御社用に作ります。
+          PDF比較・FAQ生成・営業メール生成・見積書生成など。内容を伺って個別にお見積りします。
+        </p>
+        <a href="/services/tools/" class="mt-3 inline-block text-sm font-bold text-brand-600 hover:underline">
+          作れるものの例を見る →
+        </a>
+      </div>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+        <h2 class="text-lg font-bold text-slate-900">既存ツールの改修</h2>
+        <p class="mt-2 text-sm text-slate-600">
+          「前に作ってもらったマクロ・スクリプトが動かなくなった」「今あるツールにAIを組み込みたい」といったご相談も承ります。内容を拝見して個別にお見積りします。
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-10 max-w-3xl text-sm text-slate-600">
+      <h2 class="text-lg font-bold text-slate-900">料金についての考え方</h2>
+      <ul class="mt-3 space-y-2">
+        <li>・金額は顧客層と案件規模に合わせて調整します。上記は目安です</li>
+        <li>・各ステップの前に金額を提示し、途中で止める判断もできます</li>
+        <li>・営業・設計・開発・運用を同じ人が担当するため、体制費用が乗りません</li>
+      </ul>
     </div>
   </Section>
   <Cta />

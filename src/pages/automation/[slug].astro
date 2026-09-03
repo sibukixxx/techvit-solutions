@@ -9,6 +9,7 @@ import Section from "@/components/ui/Section.astro";
 import Base from "@/layouts/Base.astro";
 import { formatMinutes, savedMinutes } from "@/lib/reduction";
 import { faqJsonLd } from "@/lib/seo";
+import { serviceOfAutomation } from "@/lib/services";
 import { INDUSTRY_LABELS } from "@/lib/site";
 
 export async function getStaticPaths() {
@@ -30,6 +31,7 @@ const relatedCases = (
 ).filter((c) => c?.data.published);
 
 const jsonLd = entry.data.faq.length > 0 ? [faqJsonLd(entry.data.faq)] : [];
+const service = await serviceOfAutomation(entry.id);
 ---
 
 <Base
@@ -48,6 +50,17 @@ const jsonLd = entry.data.faq.length > 0 ? [faqJsonLd(entry.data.faq)] : [];
       <p class="text-sm font-bold text-brand-300">業務自動化</p>
       <h1 class="mt-2 text-3xl font-bold sm:text-4xl">{entry.data.title}</h1>
       <p class="mt-4 max-w-2xl text-brand-100">{entry.data.lead}</p>
+      {
+        service && (
+          <p class="mt-6 text-sm text-brand-200">
+            この業務は
+            <a href={`/services/${service.id}/`} class="font-bold text-white underline hover:text-accent-400">
+              {service.data.title}
+            </a>
+            の対象業務です。
+          </p>
+        )
+      }
     </div>
   </div>
 
@@ -77,6 +90,22 @@ const jsonLd = entry.data.faq.length > 0 ? [faqJsonLd(entry.data.faq)] : [];
       <Content />
     </article>
   </Section>
+
+  {
+    service && (
+      <Section
+        title="この業務を含むサービス"
+        lead="料金・進め方・お渡しするものは、サービスの単位でご案内しています。"
+      >
+        <Card href={`/services/${service.id}/`} class="max-w-3xl">
+          <p class="text-xs font-bold text-brand-600">サービス</p>
+          <h3 class="mt-1 text-lg font-bold text-slate-900">{service.data.title}</h3>
+          <p class="mt-2 text-sm text-slate-600">{service.data.lead}</p>
+          <p class="mt-4 text-sm font-bold text-brand-600">サービスの詳細を見る →</p>
+        </Card>
+      </Section>
+    )
+  }
 
   {
     relatedCases.length > 0 && (
