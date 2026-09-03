@@ -14,11 +14,14 @@ TechVit Solutions のサービスサイト（https://solutions.techvit.me）。
 
 料金は 診断 → PoC → 本開発 → 運用・改善（月額） の4ステップで、データは `src/lib/plans.ts` に一元化している。
 
+営業資料（PDF）は `/downloads/` から登録不要でダウンロードできる。総合資料1本 + サービス別5本を、ビルド時に上記と同じデータから自動生成する（手作業で PDF を作らない）。
+
 ## 技術スタック
 
 - [Astro](https://astro.build/)（`output: 'static'` のみ、SSR なし）
 - Tailwind CSS v4（`@tailwindcss/vite` プラグイン方式、`tailwind.config` なし）
 - Content Collections（MDX + zod）で サービス / 業務自動化 / 業界別LP / モデルケース をデータ管理
+- 営業資料 PDF は [pdfkit](https://pdfkit.org/) でビルド時に生成（`src/lib/pdf/`、フォントは BIZ UDPGothic を同梱）
 - 問い合わせは Google Form（バックエンドなし）
 - デプロイ: Cloudflare Workers 静的アセット（GitHub 連携で `main` push → 自動デプロイ）
 - Lint / Format: Biome
@@ -54,14 +57,29 @@ make clean        # dist/ と .astro/ を削除
 
 ```
 src/
-├── components/        # Button/Card/Section (ui/), BeforeAfter, Cta, ModelCaseNote, PricingLadder, ServiceCard
+├── assets/fonts/      # PDF 埋め込み用フォント（BIZ UDPGothic, SIL OFL）。サイトには配信しない
+├── components/        # Button/Card/Section (ui/), BeforeAfter, Cta, DownloadPdf, ModelCaseNote, PricingLadder, ServiceCard
 ├── content/           # services / automation / industries / cases コレクション（MDX）
 ├── content.config.ts  # zod スキーマ
 ├── layouts/           # Base（head/OGP/JSON-LD）, Landing（サービス・業界別LP用、Service JSON-LD 付き）
-├── pages/             # ルーティング
+├── pages/             # ルーティング（downloads/*.pdf.ts は PDF を返す静的エンドポイント）
 ├── styles/global.css  # Tailwind v4（@theme でデザイントークン）
-└── lib/               # seo.ts, reduction.ts（削減時間の算出）, plans.ts（料金4ステップ）, services.ts（サービス⇄業務の逆引き）, site.ts（定数）
+└── lib/               # seo.ts, reduction.ts（削減時間の算出）, plans.ts（料金4ステップ）, services.ts（サービス⇄業務の逆引き）, downloads.ts（PDF のパス・版）, pdf/（PDF 生成）, site.ts（定数）
 ```
+
+## 営業資料（PDF）
+
+| ファイル | 内容 | 生成元 |
+|---|---|---|
+| `/downloads/techvit-services.pdf` | 総合資料（考え方 / サービス一覧 / 自動化できる業務 / 料金 / モデルケース） | `src/lib/pdf/overview.ts` |
+| `/downloads/services/<slug>.pdf` | サービス別資料（対象 / 課題 / Before→After / お渡しするもの / 本文 / 対象業務 / 料金 / モデルケース / FAQ） | `src/lib/pdf/service.ts` |
+
+- `src/pages/downloads/*.pdf.ts` の静的エンドポイントが `pnpm build` 時に pdfkit で生成する。Web と同じ Content Collections / `plans.ts` を読むので、MDX や料金を直せば PDF も同時に変わる（別途 PDF を作り直さない）
+- 部品（見出し・箇条書き・表・表紙・フッター）は `src/lib/pdf/doc.ts`、資料間で共通の表（料金・業務・モデルケース）は `src/lib/pdf/blocks.ts`
+- 表紙とフッターに「YYYY年M月版」（ビルド時点）を入れている。渡した資料と Web の料金がずれたときの目印
+- ダウンロード導線: `/downloads/`（一覧）、サービス各ページのヒーローと末尾、サービス一覧のヒーロー、トップのサービス欄、フッター。`DownloadPdf.astro` を使う
+- PDF は sitemap に含めない（`/downloads/` の一覧ページだけ載る）
+- 英語版 PDF は未対応（Phase 2）
 
 ## コンテンツ運用ルール
 
@@ -132,5 +150,6 @@ git commit -m "ci: enable GitHub Actions workflow" && git push
 - [ ] デプロイ後、Search Console にプロパティ登録 → `sitemap-index.xml` を送信、Analytics（GA4 など）タグを `Base.astro` に追加
 - [ ] 削減時間シミュレーター island（M6、React + TanStack Form）
 - [ ] Phase 2: `/en/industry/trade/`（貿易LP英語版）、サービス5ページ・automation 6ページの個別英訳（`docs/i18n-en-plan.md` §3, §7 参照）
+- [ ] 営業資料 PDF の英語版（`/en/downloads/`）と、ダウンロード前のメール登録（Google Form 連携）でのリード獲得
 - [ ] 小さな業務ツール（`/services/tools/`）に、実際に動くデモ・無料ツールへのリンクを追加する（営業先で見せるポートフォリオ兼、入口の見込み客獲得）
 - [ ] 業種別LPの拡充（製造業など）。サービスページから業種別LPへ導線をつなぐ
