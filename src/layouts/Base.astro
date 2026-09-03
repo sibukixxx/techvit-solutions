@@ -23,6 +23,8 @@ interface Props {
   locale?: Locale;
   /** 言語ペアが存在するページのみ指定する（例: { ja: "/pricing/", en: "/en/pricing/" }） */
   alternates?: Alternates;
+  /** 隠しページ（検索エンジンに載せない）。sitemap の除外は astro.config.ts 側で行う */
+  noindex?: boolean;
 }
 
 const {
@@ -33,6 +35,7 @@ const {
   jsonLd = [],
   locale = "ja",
   alternates,
+  noindex = false,
 } = Astro.props;
 
 const pageTitle = buildTitle(title);
@@ -51,7 +54,10 @@ const alternateHreflangs = alternates ? alternateLinks(alternates) : [];
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
-    <meta name="robots" content="index, follow" />
+    <meta
+      name="robots"
+      content={noindex ? "noindex, nofollow" : "index, follow"}
+    />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />

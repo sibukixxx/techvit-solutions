@@ -1,0 +1,608 @@
+---
+/**
+ * 隠しページ: 月商150万円の逆算図（2026-09 rev.2）
+ * ナビ・サイトマップに載せず、noindex で配信する。URL を知っている人だけが見る。
+ * 数値はすべて仮置き。6ヶ月ごとに実測値で引き直す。
+ */
+import Base from "@/layouts/Base.astro";
+
+type Row = { label: string; cells: string[] };
+
+const composition = [
+  {
+    name: "貿易SaaS 45万",
+    color: "bg-brand-900",
+    note: "HS Code Assistant。貿易実務者向け 月額1.5万 × 30社。既存の貿易LP・HSコード事例が入口",
+  },
+  {
+    name: "精度モニタリングSaaS 45万",
+    color: "bg-brand-500",
+    note: "LLM Evaluation Toolkit をホスト型に。RAG導入企業向け 月額3万 × 15社。今の「運用・改善」客を移行",
+  },
+  {
+    name: "パートナーライセンス 25万",
+    color: "bg-accent-600",
+    note: "AI業務診断キット（棚卸しシート・レポート雛形・シミュレーター）を士業・ITコーディネータに 月額2.5万 × 10社。診断を自分がやらない",
+  },
+  {
+    name: "教材・テンプレ 20万",
+    color: "bg-brand-300",
+    note: "RAG実践ガイドの有料版、業務棚卸しシート完全版、評価チェックリスト",
+  },
+  {
+    name: "メディア 15万",
+    color: "bg-brand-100",
+    note: "Small Manufacturer Hub の SaaS比較アフィリエイト、AGING LAB",
+  },
+];
+
+const rules = [
+  {
+    title: "3回ルール",
+    body: "同じ種類の依頼を3回受けたら、4回目は受けずに商品にする。請求書OCR、メール仕分け、HSコード調査はすでに3回分の材料がある。",
+    accent: false,
+  },
+  {
+    title: "受託は運用込み・高単価のみ",
+    body: "本開発は最低60万・運用込みに上げる。件数を月0.5件に絞り、断った分の相談はSaaSかパートナーへ流す。",
+    accent: false,
+  },
+  {
+    title: "納品物はプロダクトの一部",
+    body: "診断レポート雛形、評価ダッシュボード、棚卸しシートは顧客専用に作らず、そのままキット・SaaSの機能として作る。受託の時間がプロダクト開発の時間になる。",
+    accent: true,
+  },
+];
+
+const funnelHead = [
+  "プロダクト",
+  "有料数（24ヶ月目）",
+  "無料の入口",
+  "無料→有料",
+  "必要な無料登録",
+  "必要な訪問",
+];
+const funnel: Row[] = [
+  {
+    label: "貿易SaaS",
+    cells: ["30社", "HSコード候補を月10件まで無料", "10%", "50/月", "500/月"],
+  },
+  {
+    label: "精度モニタリングSaaS",
+    cells: [
+      "15社",
+      "Golden Dataset テンプレと無料スコア診断",
+      "10%",
+      "25/月",
+      "300/月",
+    ],
+  },
+  {
+    label: "診断キット（ライセンス）",
+    cells: ["10社", "士業向け説明資料と体験版シート", "25%", "5/月", "100/月"],
+  },
+  {
+    label: "教材・テンプレ",
+    cells: ["月20万", "連載の無料回、シート簡易版", "3%", "100/月", "1,500/月"],
+  },
+  {
+    label: "メディア",
+    cells: ["月15万", "比較記事・計算ツール", "クリック課金", "—", "20,000/月"],
+  },
+];
+
+type ContentRow = {
+  what: string;
+  where: string;
+  site: "solutions" | "www" | "other";
+  product: string;
+};
+const phases: {
+  title: string;
+  goals: string[];
+  rows: ContentRow[];
+}[] = [
+  {
+    title: "Phase 1（1〜6ヶ月）入口を作る",
+    goals: ["非拘束 30万/月", "SaaS無料登録 50/月"],
+    rows: [
+      {
+        what: "HS Code Assistant 無料版と専用LP。貿易LP・HSコード事例・automation/pdf から導線",
+        where: "/tools/hs-code/",
+        site: "solutions",
+        product: "貿易SaaS",
+      },
+      {
+        what: "業務棚卸しシート簡易版（登録制）と完全版の販売ページ",
+        where: "/downloads/",
+        site: "solutions",
+        product: "教材、診断キット",
+      },
+      {
+        what: "削減時間シミュレーター。結果画面の CTA を「シートを受け取る」「ツールを試す」に",
+        where: "/simulator/",
+        site: "solutions",
+        product: "教材、貿易SaaS",
+      },
+      {
+        what: "Golden Dataset テンプレと「RAG 無料スコア診断」の受付。連載末尾から誘導",
+        where: "/tools/rag-score/",
+        site: "www",
+        product: "精度モニタリングSaaS",
+      },
+      {
+        what: "RAG実践ガイド有料版（連載8本を演習・コード付きにまとめる）の販売ページ",
+        where: "/writing/rag-series-0-overview/",
+        site: "www",
+        product: "教材",
+      },
+      {
+        what: "本開発ページの単価・運用込み表記の変更。相談フォームに「まず無料で試す」導線",
+        where: "plans.ts、/contact/",
+        site: "solutions",
+        product: "受託の絞り込み",
+      },
+    ],
+  },
+  {
+    title: "Phase 2（7〜12ヶ月）有料化と流入の自動化",
+    goals: ["非拘束 75万/月", "SaaS有料 各5社", "訪問 2,000/月"],
+    rows: [
+      {
+        what: "HSコード検索記事を品目カテゴリ別に量産（HSコード 〇〇 調べ方）。データから生成し手で書かない",
+        where: "/guides/hs-code/",
+        site: "solutions",
+        product: "貿易SaaS",
+      },
+      {
+        what: "精度モニタリングSaaS の商品ページと月次レポートの公開サンプル。既存の運用客を移行",
+        where: "/services/monitoring/",
+        site: "solutions",
+        product: "精度モニタリングSaaS",
+      },
+      {
+        what: "発注者向け橋渡し記事 3本（精度が上がらない10項目、PoCが本番に進まない理由、評価を外注する前に）",
+        where: "/writing/",
+        site: "www",
+        product: "精度モニタリングSaaS",
+      },
+      {
+        what: "診断キットのパートナー向けページ（士業・ITコーディネータ。キットの中身、価格、顧客への提案例）",
+        where: "/partners/",
+        site: "solutions",
+        product: "診断キット",
+      },
+      {
+        what: "7日メールシーケンスを登録元ごとに3本（貿易、RAG、棚卸し）。自社の LINE 導線商品を自分に適用",
+        where: "メール配信",
+        site: "other",
+        product: "全プロダクト",
+      },
+      {
+        what: "SMH の SaaS比較記事を月4本、計算ツールを月1本。アフィリエイトの対象を増やす",
+        where: "Small Manufacturer Hub",
+        site: "other",
+        product: "メディア",
+      },
+    ],
+  },
+  {
+    title: "Phase 3（13〜24ヶ月）受託を外す",
+    goals: ["非拘束 150万/月", "受託 0"],
+    rows: [
+      {
+        what: "英語版 HS Code LP と英語記事。海外の貿易実務者・フォワーダー向け",
+        where: "/en/tools/hs-code/",
+        site: "solutions",
+        product: "貿易SaaS（海外）",
+      },
+      {
+        what: "2本目の業務ツールSaaS（請求書OCR取り込み、またはメール仕分け。3回ルールで決める）の無料版と LP",
+        where: "/tools/",
+        site: "solutions",
+        product: "新SaaS",
+      },
+      {
+        what: "パートナー導入事例（キットを使って診断を売った士業の声）",
+        where: "/partners/cases/",
+        site: "solutions",
+        product: "診断キット",
+      },
+      {
+        what: "実績ケースへの置き換えと、モデルケースの廃止",
+        where: "/cases/",
+        site: "solutions",
+        product: "全プロダクト",
+      },
+      {
+        what: "build-in-public の月次ログ（MRR、解約、学び）",
+        where: "/lab/",
+        site: "www",
+        product: "教材、紹介",
+      },
+    ],
+  },
+];
+
+const siteLabel: Record<ContentRow["site"], string> = {
+  solutions: "solutions",
+  www: "www",
+  other: "外部",
+};
+
+const kpiHead = ["指標", "6ヶ月目", "12ヶ月目", "18ヶ月目", "24ヶ月目"];
+const kpis: Row[] = [
+  { label: "非拘束売上", cells: ["30万", "75万", "105万", "150万"] },
+  { label: "非拘束比率", cells: ["25%", "50%", "68%", "100%"] },
+  {
+    label: "SaaS 有料数（貿易 / 精度）",
+    cells: ["2 / 1", "5 / 5", "15 / 10", "30 / 15"],
+  },
+  { label: "ライセンス契約数", cells: ["0", "3", "6", "10"] },
+  {
+    label: "無料登録（全プロダクト合計）",
+    cells: ["50/月", "150/月", "250/月", "300/月"],
+  },
+  {
+    label: "訪問（両サイト＋SMH）",
+    cells: ["1,000/月", "4,000/月", "12,000/月", "22,000/月"],
+  },
+  { label: "受託件数", cells: ["1/月", "0.5/月", "0.3/月", "0"] },
+];
+
+const roles = [
+  {
+    head: "solutions.techvit.me はプロダクトの売場。",
+    body: "貿易SaaS、2本目のツール、精度モニタリング、診断キットの LP と無料版をここに集める。サービス5商材は「まず無料で試す」の後ろに下げる。",
+  },
+  {
+    head: "www.techvit.me は教材と RAG 客の入口。",
+    body: "連載を有料教材と無料スコア診断に接続し、精度モニタリング SaaS の初期顧客をここから取る。受託の窓口としての役割は縮める。",
+  },
+  {
+    head: "Small Manufacturer Hub はメディアとして独立運転。",
+    body: "比較記事と計算ツールを積み、製造業向けの2本目ツールの実験場にもする。",
+  },
+  {
+    head: "ニュースレターは1本、シーケンスは登録元ごとに3本。",
+    body: "配信の運用は増やさない。",
+  },
+];
+
+const production = [
+  {
+    head: "データから生成する。",
+    body: "営業資料 PDF をビルド時に生成している仕組みを、ガイド記事・HSコード記事・業種LPに広げる。Content Collections の Before/After と FAQ から記事の骨格を出し、人は差分だけ書く。",
+  },
+  {
+    head: "Threads 自動化の流用。",
+    body: "テーマ選定から投稿・分析までのパイプラインを、記事の下書きとメール配信原稿に転用する。",
+  },
+  {
+    head: "1本を5回使う。",
+    body: "連載1本 = 記事、メール1通、SNS投稿3本、教材の1章、パートナー資料の1ページ。制作の単位を「連載1本」に固定する。",
+  },
+  {
+    head: "作らないものを決める。",
+    body: "プロダクトの入口にならない記事、無料相談にしか繋がらない記事は作らない。",
+  },
+];
+
+const thClass =
+  "whitespace-nowrap bg-slate-50 px-3 py-2 text-left text-xs font-normal tracking-wider text-slate-500";
+const tdClass = "border-t border-slate-200 px-3 py-2.5 align-top";
+const numClass = `${tdClass} whitespace-nowrap tabular-nums`;
+---
+
+<Base
+  title="月商150万円の逆算図"
+  description="労働時間に拘束されない売上だけで月商150万円を作る24ヶ月計画と、プロダクトから逆算したコンテンツの制作順（社内資料）。"
+  noindex
+>
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+    <!-- ヘッダー -->
+    <header class="border-b border-slate-200 pb-8">
+      <p class="text-xs font-bold tracking-widest text-slate-500">
+        TECHVIT · GROWTH PLAN · 2026-09 · REV.2 · 社内資料
+      </p>
+      <h1 class="mt-3 text-3xl font-bold leading-tight text-brand-950 sm:text-4xl">
+        月商150万円の逆算図
+      </h1>
+      <p class="mt-4 max-w-3xl text-lg text-slate-700">
+        労働時間に拘束されない売上だけで月商150万円を作る。受託と診断は売上目標に数えず、プロダクトを見つけて客を集めるための道具に格下げする。コンテンツはすべてプロダクトの入口として逆算する。
+      </p>
+      <dl class="mt-5 flex flex-wrap gap-x-8 gap-y-1 text-sm text-slate-500">
+        <div><dt class="inline">対象:</dt> <dd class="inline">solutions.techvit.me / www.techvit.me</dd></div>
+        <div><dt class="inline">期間:</dt> <dd class="inline">24ヶ月（12ヶ月目で非拘束50%、24ヶ月目で100%）</dd></div>
+        <div><dt class="inline">前提:</dt> <dd class="inline">数値は仮置き。6ヶ月ごとに実測値で引き直す</dd></div>
+      </dl>
+    </header>
+
+    <!-- 01 到達点 -->
+    <section class="grid gap-4 border-b border-slate-200 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">01 · 到達点</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">24ヶ月目の月商構成（すべて非拘束）</h2>
+        <p class="mt-3 max-w-3xl text-slate-600">
+          「非拘束」の定義は、その月の稼働がゼロでも請求が立つ売上。契約数・ユーザー数・流入に比例し、自分の時間には比例しないもの。
+        </p>
+
+        <svg
+          viewBox="0 0 1000 120"
+          role="img"
+          aria-label="月商150万円の構成。貿易SaaS45万、精度モニタリングSaaS45万、パートナーライセンス25万、デジタル商品20万、メディア15万"
+          class="mt-6 block h-auto w-full"
+        >
+          <rect x="0" y="20" width="300" height="56" fill="var(--color-brand-900)"></rect>
+          <rect x="300" y="20" width="300" height="56" fill="var(--color-brand-500)"></rect>
+          <rect x="600" y="20" width="167" height="56" fill="var(--color-accent-600)"></rect>
+          <rect x="767" y="20" width="133" height="56" fill="var(--color-brand-300)"></rect>
+          <rect x="900" y="20" width="100" height="56" fill="var(--color-brand-100)"></rect>
+          <g font-size="20" fill="#ffffff" font-weight="700">
+            <text x="16" y="55">45万</text>
+            <text x="316" y="55">45万</text>
+            <text x="616" y="55">25万</text>
+            <text x="783" y="55">20万</text>
+          </g>
+          <g font-size="15" fill="var(--color-slate-500)">
+            <text x="0" y="104">貿易SaaS</text>
+            <text x="300" y="104">精度モニタリングSaaS</text>
+            <text x="600" y="104">ライセンス</text>
+            <text x="767" y="104">教材</text>
+            <text x="1000" y="104" text-anchor="end">メディア</text>
+          </g>
+        </svg>
+
+        <ul class="mt-4 grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
+          {
+            composition.map((c) => (
+              <li class="grid grid-cols-[0.75rem_1fr] gap-3">
+                <span class:list={["mt-1.5 block size-3 rounded-sm", c.color]} />
+                <span>
+                  <strong class="text-slate-900">{c.name}</strong>
+                  <span class="block text-slate-500">{c.note}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-6 border-l-4 border-accent-500 bg-amber-50 px-5 py-4 text-sm text-slate-800">
+          <p class="font-bold">受託・診断・PoC・本開発は、この150万に入れない</p>
+          <p class="mt-1">
+            売上としては続けてよいが、目標に数えない。役割は3つ。当面の現金、プロダクトの種（同じ依頼を3回受けたら商品化）、SaaS の初期顧客。24ヶ月目には受託ゼロでも150万が立つ状態にする。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 移行 -->
+    <section class="grid gap-4 border-b border-slate-200 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">02 · 移行</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">拘束売上から非拘束売上への切り替え</h2>
+        <p class="mt-3 max-w-3xl text-slate-600">
+          いきなり受託を止めると現金が切れる。受託で食べながら、6ヶ月ごとに非拘束の比率を上げる。受託は単価を上げて件数を減らし、空いた時間をプロダクトに回す。
+        </p>
+
+        <svg
+          viewBox="0 0 1000 250"
+          role="img"
+          aria-label="6ヶ月ごとの売上構成。拘束売上は月商100万から0へ、非拘束売上は5万から150万へ"
+          class="mt-6 block h-auto w-full"
+        >
+          <g font-size="14" fill="var(--color-slate-500)">
+            <text x="60" y="238" text-anchor="middle">現在</text>
+            <text x="280" y="238" text-anchor="middle">6ヶ月</text>
+            <text x="500" y="238" text-anchor="middle">12ヶ月</text>
+            <text x="720" y="238" text-anchor="middle">18ヶ月</text>
+            <text x="940" y="238" text-anchor="middle">24ヶ月</text>
+          </g>
+          <g>
+            <rect x="20" y="90" width="80" height="120" fill="var(--color-slate-300)"></rect>
+            <rect x="20" y="84" width="80" height="6" fill="var(--color-accent-500)"></rect>
+            <rect x="240" y="102" width="80" height="108" fill="var(--color-slate-300)"></rect>
+            <rect x="240" y="66" width="80" height="36" fill="var(--color-accent-500)"></rect>
+            <rect x="460" y="120" width="80" height="90" fill="var(--color-slate-300)"></rect>
+            <rect x="460" y="30" width="80" height="90" fill="var(--color-accent-500)"></rect>
+            <rect x="680" y="150" width="80" height="60" fill="var(--color-slate-300)"></rect>
+            <rect x="680" y="24" width="80" height="126" fill="var(--color-accent-500)"></rect>
+            <rect x="900" y="30" width="80" height="180" fill="var(--color-accent-500)"></rect>
+          </g>
+          <g font-size="13" fill="var(--color-slate-900)" font-weight="700">
+            <text x="60" y="76" text-anchor="middle">5 / 100</text>
+            <text x="280" y="58" text-anchor="middle">30 / 90</text>
+            <text x="500" y="22" text-anchor="middle">75 / 75</text>
+            <text x="720" y="16" text-anchor="middle">105 / 50</text>
+            <text x="940" y="22" text-anchor="middle">150 / 0</text>
+          </g>
+          <line x1="0" y1="210" x2="1000" y2="210" stroke="var(--color-slate-200)"></line>
+          <g font-size="13" fill="var(--color-slate-500)">
+            <rect x="0" y="4" width="12" height="12" fill="var(--color-accent-500)"></rect>
+            <text x="18" y="15">非拘束（万円/月）</text>
+            <rect x="150" y="4" width="12" height="12" fill="var(--color-slate-300)"></rect>
+            <text x="168" y="15">拘束（受託・診断・PoC）</text>
+          </g>
+        </svg>
+
+        <div class="mt-6 grid gap-5 sm:grid-cols-3">
+          {
+            rules.map((r) => (
+              <div
+                class:list={[
+                  "border-t-4 pt-3",
+                  r.accent ? "border-accent-500" : "border-brand-800",
+                ]}
+              >
+                <h3 class="font-bold text-slate-900">{r.title}</h3>
+                <p class="mt-1 text-sm text-slate-600">{r.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 逆算 -->
+    <section class="grid gap-4 border-b border-slate-200 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">03 · 逆算</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">プロダクトごとの入口と必要数</h2>
+        <p class="mt-3 max-w-3xl text-slate-600">
+          相談フォームに向かうファネルではなく、無料で触れる入口から有料へ上がるファネルを5本作る。各プロダクトの月次目標と、そこから逆算した流入の数。
+        </p>
+        <div class="mt-5 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+          <table class="w-full text-sm">
+            <thead>
+              <tr>{funnelHead.map((h) => <th class={thClass}>{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {
+                funnel.map((row) => (
+                  <tr>
+                    <td class={`${tdClass} font-bold text-slate-900`}>{row.label}</td>
+                    {row.cells.map((c, i) => (
+                      <td class={i === 1 ? tdClass : numClass}>{c}</td>
+                    ))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-sm text-slate-500">
+          解約は月3%で見込む。SaaS 2本は12ヶ月目で有料5社ずつ、18ヶ月目で15社と10社、24ヶ月目で30社と15社に到達する計算。
+        </p>
+      </div>
+    </section>
+
+    <!-- 04 コンテンツ -->
+    <section class="grid gap-4 border-b border-slate-200 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">04 · コンテンツ</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">プロダクトから逆算した制作順</h2>
+        <p class="mt-3 max-w-3xl text-slate-600">
+          すべてのコンテンツの CTA を「無料相談」から「無料で試す」に変える。相談はプロダクトを試したあとの選択肢に下げる。
+        </p>
+        {
+          phases.map((phase) => (
+            <div class="mt-8">
+              <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <h3 class="font-bold text-slate-900">{phase.title}</h3>
+                <p class="text-sm text-slate-500">
+                  目標
+                  {phase.goals.map((g) => (
+                    <span class="ml-2 font-bold tabular-nums text-accent-600">{g}</span>
+                  ))}
+                </p>
+              </div>
+              <div class="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr>
+                      <th class={thClass}>コンテンツ</th>
+                      <th class={thClass}>置き場所</th>
+                      <th class={thClass}>入口になるプロダクト</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {phase.rows.map((row) => (
+                      <tr>
+                        <td class={tdClass}>{row.what}</td>
+                        <td class={`${tdClass} whitespace-nowrap`}>
+                          <span
+                            class:list={[
+                              "mr-2 inline-block rounded border px-1.5 text-xs",
+                              row.site === "solutions"
+                                ? "border-brand-600 text-brand-700"
+                                : "border-slate-300 text-slate-500",
+                            ]}
+                          >
+                            {siteLabel[row.site]}
+                          </span>
+                          {row.where}
+                        </td>
+                        <td class={`${tdClass} whitespace-nowrap`}>{row.product}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 05 制作 -->
+    <section class="grid gap-4 border-b border-slate-200 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">05 · 制作</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">コンテンツ制作も時間に拘束させない</h2>
+        <ul class="mt-4 max-w-3xl list-disc space-y-2 pl-5 text-slate-700">
+          {
+            production.map((p) => (
+              <li>
+                <strong class="text-slate-900">{p.head}</strong>
+                {p.body}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- 06 計測 -->
+    <section class="grid gap-4 border-b border-slate-200 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">06 · 計測</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">毎月見る数字</h2>
+        <p class="mt-3 max-w-3xl text-slate-600">
+          最初の2行が本題。非拘束売上の比率と、稼働がゼロだった日の売上。ファネルの数字はその下。
+        </p>
+        <div class="mt-5 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+          <table class="w-full text-sm">
+            <thead>
+              <tr>{kpiHead.map((h) => <th class={thClass}>{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {
+                kpis.map((row, ri) => (
+                  <tr>
+                    <td class:list={[tdClass, ri < 2 && "font-bold text-slate-900"]}>{row.label}</td>
+                    {row.cells.map((c, ci) => (
+                      <td class:list={[numClass, ri < 2 && ci === 3 && "font-bold text-slate-900"]}>
+                        {c}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 役割分担 -->
+    <section class="grid gap-4 py-12 sm:grid-cols-[9rem_1fr] sm:gap-x-10">
+      <p class="text-xs font-bold tracking-widest text-slate-500 sm:pt-2">07 · 役割分担</p>
+      <div>
+        <h2 class="text-2xl font-bold text-brand-950">2つのサイトの分業</h2>
+        <ul class="mt-4 max-w-3xl list-disc space-y-2 pl-5 text-slate-700">
+          {
+            roles.map((r) => (
+              <li>
+                <strong class="text-slate-900">{r.head}</strong>
+                {r.body}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-8 text-sm text-slate-500">
+          数値はすべて仮置き。6ヶ月目に無料→有料の転換率と解約率を実測し、必要な訪問数とコンテンツ本数を引き直す。
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>

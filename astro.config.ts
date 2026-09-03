@@ -10,6 +10,8 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
+      // 隠しページ（/internal/ 配下）は sitemap に載せない。ページ側は Base の noindex を使う
+      filter: (page) => !new URL(page).pathname.startsWith("/internal/"),
       serialize(item) {
         const path = new URL(item.url).pathname;
         if (path === "/") {
