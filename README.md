@@ -126,7 +126,7 @@ git commit -m "ci: enable GitHub Actions workflow" && git push
 ## 残タスク
 
 - [x] Google Form 作成 → `src/lib/site.ts` の `GOOGLE_FORM_URL_JA` / `GOOGLE_FORM_URL_EN` を本番 URL に差し替え
-- [ ] `public/og-default.png` を正式デザインに差し替え（現状は無地グラデーションのプレースホルダ）
+- [x] `public/og-default.png` を正式デザインに差し替え（カプセル＋葉のブランドマーク。`public/logo-mark.png` / `icon-*.png` / `favicon.svg` と同じ素材）
 - [x] Cloudflare ダッシュボードで GitHub 連携（ビルド: `pnpm build` / 出力: `dist`）
 - [x] カスタムドメイン `solutions.techvit.me` の割り当て
 - [ ] デプロイ後、Search Console にプロパティ登録 → `sitemap-index.xml` を送信、Analytics（GA4 など）タグを `Base.astro` に追加
