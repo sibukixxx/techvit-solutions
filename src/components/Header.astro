@@ -23,8 +23,8 @@ const menuLabel = locale === "en" ? "Toggle menu" : "メニューを開閉";
     <a href={homeHref} class="text-lg font-bold tracking-tight text-brand-900">
       {SITE_NAME}
     </a>
-    <div class="flex items-center gap-1 md:gap-2">
-      <nav aria-label="Main" class="hidden items-center gap-1 md:flex lg:gap-2">
+    <div class="flex items-center gap-1 lg:gap-2">
+      <nav aria-label="Main" class="hidden items-center gap-1 lg:flex lg:gap-2">
         {
           navItems.map((item) => (
             <a
@@ -54,7 +54,7 @@ const menuLabel = locale === "en" ? "Toggle menu" : "メニューを開閉";
         aria-expanded="false"
         aria-controls="mobile-menu"
         aria-label={menuLabel}
-        class="group -mr-1 rounded-md p-2 text-slate-700 hover:bg-slate-100 md:hidden"
+        class="group -mr-1 rounded-md p-2 text-slate-700 hover:bg-slate-100 lg:hidden"
       >
         <svg
           class="size-6 group-aria-expanded:hidden"
@@ -86,7 +86,7 @@ const menuLabel = locale === "en" ? "Toggle menu" : "メニューを開閉";
     id="mobile-menu"
     aria-label="Main"
     hidden
-    class="border-t border-slate-200 px-4 py-2 md:hidden"
+    class="border-t border-slate-200 px-4 py-2 lg:hidden"
   >
     <ul>
       {

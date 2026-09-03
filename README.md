@@ -2,13 +2,23 @@
 
 TechVit Solutions のサービスサイト（https://solutions.techvit.me）。
 
-「その手作業、毎月何時間かかっていますか？」— 中小企業の手作業（PDF検索・Excel転記・メール処理・請求書入力など）を AI で自動化するサービスの営業用サイト。
+「その手作業、毎月何時間かかっていますか？」— 中小企業の手作業（社内資料の検索・営業前の調査・報告書作成・請求書入力など）を AI で省力化するサービスの営業用サイト。
+
+「エンジニア」ではなく「御社のこの業務を、これだけ省力化します」を売る方針で、情報を次の3階層に分けている。
+
+| 階層 | ページ | 単位 |
+|---|---|---|
+| サービス（何を売るか） | `/services/`（5商材: AI業務診断 / 小さな業務ツール / ナレッジ検索・問い合わせ対応 / 営業支援 / ドキュメント業務） | 商品・料金・進め方 |
+| 業務自動化（どの作業が軽くなるか） | `/automation/`（6業務: PDF / Excel / メール / 営業 / バックオフィス / 社内検索） | 業務ごとの Before / After |
+| モデルケース（どれだけ減るか） | `/cases/` | 削減時間の具体例 |
+
+料金は 診断 → PoC → 本開発 → 運用・改善（月額） の4ステップで、データは `src/lib/plans.ts` に一元化している。
 
 ## 技術スタック
 
 - [Astro](https://astro.build/)（`output: 'static'` のみ、SSR なし）
 - Tailwind CSS v4（`@tailwindcss/vite` プラグイン方式、`tailwind.config` なし）
-- Content Collections（MDX + zod）で 業務自動化 / 業界別LP / モデルケース をデータ管理
+- Content Collections（MDX + zod）で サービス / 業務自動化 / 業界別LP / モデルケース をデータ管理
 - 問い合わせは Google Form（バックエンドなし）
 - デプロイ: Cloudflare Workers 静的アセット（GitHub 連携で `main` push → 自動デプロイ）
 - Lint / Format: Biome
@@ -44,17 +54,20 @@ make clean        # dist/ と .astro/ を削除
 
 ```
 src/
-├── components/        # Button/Card/Section (ui/), BeforeAfter, Cta, ModelCaseNote
-├── content/           # automation / industries / cases コレクション（MDX）
+├── components/        # Button/Card/Section (ui/), BeforeAfter, Cta, ModelCaseNote, PricingLadder, ServiceCard
+├── content/           # services / automation / industries / cases コレクション（MDX）
 ├── content.config.ts  # zod スキーマ
-├── layouts/           # Base（head/OGP/JSON-LD）, Landing（業界別LP用）
+├── layouts/           # Base（head/OGP/JSON-LD）, Landing（サービス・業界別LP用、Service JSON-LD 付き）
 ├── pages/             # ルーティング
 ├── styles/global.css  # Tailwind v4（@theme でデザイントークン）
-└── lib/               # seo.ts, reduction.ts（削減時間の算出）, site.ts（定数）
+└── lib/               # seo.ts, reduction.ts（削減時間の算出）, plans.ts（料金4ステップ）, services.ts（サービス⇄業務の逆引き）, site.ts（定数）
 ```
 
 ## コンテンツ運用ルール
 
+- サービス（`src/content/services/`）は「売る単位」。`kind: core`（主力3商材）/ `kind: entry`（入口: 診断・小さなツール）で分け、`automations` に対象となる業務（`/automation/` のスラッグ）を持たせる。業務ページ側は `src/lib/services.ts` で親サービスを逆引きするため、親子関係はサービス側にだけ書く
+- 料金・期間・各ステップの内容は `src/lib/plans.ts` だけを編集する（トップ / 料金 / サービス各ページ / 英語ページが同じデータを参照する）。金額を変えたら `src/content/cases/` の `price_range` と `src/lib/site.ts` の `SITE_DESCRIPTION` も合わせて確認する
+- 技術名（RAG・LLM など）は見出しや売り文句にしない。「探す時間」「回答を作る時間」など業務の言葉で書き、技術は FAQ や「実現の根拠」に置く
 - モデルケース（`src/content/cases/`）には「※導入効果のモデルケースです」の注記を必ず表示する（`is_model_case: true` で自動表示）。実績と誤認させる表現は使わない
 - 削減時間は frontmatter の `before` / `after` から自動算出する（手入力しない）
 - 技術スタック名は主役にせず、「Before → After → 削減時間」の後に「実現の根拠」として置く
@@ -67,7 +80,7 @@ src/
 - **コンテンツ**: `src/content/cases/en/<slug>.mdx` のようにロケールサブフォルダ＋同名ファイルで英語版を管理する。同名ファイルの有無が言語ペアの対応表を兼ねる（`src/lib/i18n.ts` の `localeOfId` / `stripLocalePrefix` 参照）
 - **UI文字列辞書**: `src/lib/i18n.ts` の `t(locale)` に集約。共通コンポーネント（Header/Footer/Cta/ModelCaseNote/Breadcrumb/BeforeAfter/Base/Landing）は `locale?: Locale`（デフォルト `"ja"`）を受け取り、省略時は既存の日本語ページと同じ出力になる
 - **hreflang**: 言語ペアが実在するページだけ `Base` に `alternates={{ ja: "...", en: "..." }}` を渡す（`src/lib/seo.ts` の `alternateLinks`）。ペアがないページ（例: `/en/services/` は日本語側が automation 6ページに分割されており1:1対応がないため）には付けない
-- **`/en/services/`** は automation 6ページの内容を1ページに集約したダイジェスト（Content Collections ではなく手書きの `.astro`）。個別ページの翻訳は Phase 2
+- **`/en/services/`** は サービス5商材のメニュー（"What we offer"）と automation 6ページのダイジェスト（"What we automate"）を1ページに集約したもの（Content Collections ではなく手書きの `.astro`）。サービス個別ページ・automation 個別ページの英訳は Phase 2
 - **`/en/contact/`** は英語版 Google Form（`GOOGLE_FORM_URL_EN`、`src/lib/site.ts`）を埋め込み。日本語版と同じ構成（iframe + 別タブリンク）
 - **新しい日本語コンテンツを追加/更新したら**: 対応する `en/` ファイルがあれば同じPRで更新する（翻訳ドリフト防止）
 
@@ -118,4 +131,6 @@ git commit -m "ci: enable GitHub Actions workflow" && git push
 - [x] カスタムドメイン `solutions.techvit.me` の割り当て
 - [ ] デプロイ後、Search Console にプロパティ登録 → `sitemap-index.xml` を送信、Analytics（GA4 など）タグを `Base.astro` に追加
 - [ ] 削減時間シミュレーター island（M6、React + TanStack Form）
-- [ ] Phase 2: `/en/industry/trade/`（貿易LP英語版）と automation 6ページの個別英訳（`docs/i18n-en-plan.md` §3, §7 参照）
+- [ ] Phase 2: `/en/industry/trade/`（貿易LP英語版）、サービス5ページ・automation 6ページの個別英訳（`docs/i18n-en-plan.md` §3, §7 参照）
+- [ ] 小さな業務ツール（`/services/tools/`）に、実際に動くデモ・無料ツールへのリンクを追加する（営業先で見せるポートフォリオ兼、入口の見込み客獲得）
+- [ ] 業種別LPの拡充（製造業など）。サービスページから業種別LPへ導線をつなぐ

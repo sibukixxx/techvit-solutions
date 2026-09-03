@@ -15,7 +15,11 @@ export default defineConfig({
         if (path === "/") {
           return { ...item, priority: 1.0, changefreq: ChangeFreqEnum.WEEKLY };
         }
-        if (path.startsWith("/cases/") || path.startsWith("/automation/")) {
+        if (
+          path.startsWith("/services/") ||
+          path.startsWith("/cases/") ||
+          path.startsWith("/automation/")
+        ) {
           return {
             ...item,
             priority: 0.8,

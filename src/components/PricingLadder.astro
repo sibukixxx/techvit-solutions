@@ -1,0 +1,43 @@
+---
+import type { Locale } from "@/lib/i18n";
+import { plans } from "@/lib/plans";
+
+/**
+ * 進め方と料金の4ステップを横並びで見せる。
+ * 金額・期間・要約は lib/plans.ts が唯一の情報源。
+ */
+interface Props {
+  locale?: Locale;
+  class?: string;
+}
+
+const { locale = "ja", class: className = "" } = Astro.props;
+const list = plans(locale);
+---
+
+<ol class:list={["grid gap-4 sm:grid-cols-2 lg:grid-cols-4", className]}>
+  {
+    list.map((plan, i) => (
+      <li
+        class:list={[
+          "relative rounded-xl border bg-white p-5 shadow-sm",
+          plan.recurring ? "border-brand-200 bg-brand-50/40" : "border-slate-200",
+        ]}
+      >
+        <p class="text-xs font-bold text-brand-600">{plan.step}</p>
+        <p class="mt-1 font-bold text-slate-900">{plan.name}</p>
+        <p class="mt-1 text-xl font-bold text-slate-900">{plan.price}</p>
+        <p class="text-xs text-slate-500">{plan.period}</p>
+        <p class="mt-3 text-sm text-slate-600">{plan.summary}</p>
+        {i < list.length - 1 && (
+          <span
+            aria-hidden="true"
+            class="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-slate-300 lg:block"
+          >
+            →
+          </span>
+        )}
+      </li>
+    ))
+  }
+</ol>
