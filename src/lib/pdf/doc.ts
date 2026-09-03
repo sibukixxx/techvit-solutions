@@ -1,5 +1,6 @@
 import PDFDocument from "pdfkit";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { BRAND_MARK_PATH } from "./brand";
 import { loadFonts } from "./fonts";
 
 export const A4 = { width: 595.28, height: 841.89 } as const;
@@ -82,6 +83,15 @@ export class Brochure {
     });
     this.doc = doc;
     this.version = version;
+  }
+
+  /** ブランドマーク（カプセル＋葉）と社名を横並びで描く。size はマークの一辺 */
+  private logo(x: number, y: number, size: number, color: string): void {
+    this.doc.image(BRAND_MARK_PATH, x, y, { width: size, height: size });
+    this.setFont(true, size * 0.42, color);
+    this.doc.text(SITE_NAME, x + size + size * 0.28, y + size * 0.28, {
+      lineBreak: false,
+    });
   }
 
   // ---- 位置 -------------------------------------------------------------
@@ -398,10 +408,9 @@ export class Brochure {
     doc.rect(0, 0, A4.width, bandH).fill(C.brand950);
     doc.rect(0, bandH, A4.width, 5).fill(C.accent500);
 
-    this.setFont(true, 10, C.white);
-    doc.text(SITE_NAME, this.x, 48, { width: CONTENT_WIDTH, align: "right" });
+    this.logo(this.x, 40, 30, C.white);
 
-    let y = 96;
+    let y = 104;
     this.setFont(true, 10, C.brand300);
     doc.text(opts.eyebrow, this.x, y, {
       width: CONTENT_WIDTH - 120,
@@ -515,9 +524,10 @@ export class Brochure {
         .lineTo(this.x + CONTENT_WIDTH, y - 8)
         .lineWidth(0.5)
         .stroke(C.slate200);
+      doc.image(BRAND_MARK_PATH, this.x, y - 2, { width: 12, height: 12 });
       this.setFont(false, 7.5, C.slate500);
-      doc.text(`${SITE_NAME}｜${SITE_URL}｜${this.version}`, this.x, y, {
-        width: CONTENT_WIDTH - 60,
+      doc.text(`${SITE_NAME}｜${SITE_URL}｜${this.version}`, this.x + 16, y, {
+        width: CONTENT_WIDTH - 76,
         lineBreak: false,
       });
       doc.text(`${i + 1} / ${range.count}`, this.x + CONTENT_WIDTH - 60, y, {

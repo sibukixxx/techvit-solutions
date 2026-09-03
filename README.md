@@ -77,6 +77,7 @@ src/
 - `src/pages/downloads/*.pdf.ts` の静的エンドポイントが `pnpm build` 時に pdfkit で生成する。Web と同じ Content Collections / `plans.ts` を読むので、MDX や料金を直せば PDF も同時に変わる（別途 PDF を作り直さない）
 - 部品（見出し・箇条書き・表・表紙・フッター）は `src/lib/pdf/doc.ts`、資料間で共通の表（料金・業務・モデルケース）は `src/lib/pdf/blocks.ts`
 - 表紙とフッターに「YYYY年M月版」（ビルド時点）を入れている。渡した資料と Web の料金がずれたときの目印
+- 表紙とフッターのブランドマークは `public/icon-192.png`（サイトのヘッダー・favicon・OG 画像と同じ素材）を `src/lib/pdf/brand.ts` から参照する
 - ダウンロード導線: `/downloads/`（一覧）、サービス各ページのヒーローと末尾、サービス一覧のヒーロー、トップのサービス欄、フッター。`DownloadPdf.astro` を使う
 - PDF は sitemap に含めない（`/downloads/` の一覧ページだけ載る）
 - 英語版 PDF は未対応（Phase 2）
