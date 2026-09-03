@@ -20,7 +20,18 @@ const menuLabel = locale === "en" ? "Toggle menu" : "メニューを開閉";
 
 <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-2 px-4 py-3">
-    <a href={homeHref} class="text-lg font-bold tracking-tight text-brand-900">
+    <a
+      href={homeHref}
+      class="flex items-center gap-2 text-lg font-bold tracking-tight text-brand-900"
+    >
+      <img
+        src="/logo-mark.png"
+        alt=""
+        width="32"
+        height="32"
+        class="size-8"
+        decoding="async"
+      />
       {SITE_NAME}
     </a>
     <div class="flex items-center gap-1 lg:gap-2">

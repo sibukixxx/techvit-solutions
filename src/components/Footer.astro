@@ -19,7 +19,17 @@ const year = new Date().getFullYear();
   <div class="mx-auto max-w-6xl px-4 py-10">
     <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <p class="text-base font-bold text-brand-900">{SITE_NAME}</p>
+        <p class="flex items-center gap-2 text-base font-bold text-brand-900">
+          <img
+            src="/logo-mark.png"
+            alt=""
+            width="24"
+            height="24"
+            class="size-6"
+            loading="lazy"
+          />
+          {SITE_NAME}
+        </p>
         <p class="mt-2 max-w-sm text-sm text-slate-600">
           {dict.footerTagline}
         </p>

@@ -20,6 +20,7 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: SITE_NAME,
     url: SITE_URL,
+    logo: absoluteUrl("/icon-512.png"),
     description: SITE_DESCRIPTION,
     founder: { "@id": "https://www.techvit.me/about/#person" },
   };

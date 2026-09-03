@@ -77,6 +77,7 @@ src/
 - `src/pages/downloads/*.pdf.ts` の静的エンドポイントが `pnpm build` 時に pdfkit で生成する。Web と同じ Content Collections / `plans.ts` を読むので、MDX や料金を直せば PDF も同時に変わる（別途 PDF を作り直さない）
 - 部品（見出し・箇条書き・表・表紙・フッター）は `src/lib/pdf/doc.ts`、資料間で共通の表（料金・業務・モデルケース）は `src/lib/pdf/blocks.ts`
 - 表紙とフッターに「YYYY年M月版」（ビルド時点）を入れている。渡した資料と Web の料金がずれたときの目印
+- 表紙とフッターのブランドマークは `public/icon-192.png`（サイトのヘッダー・favicon・OG 画像と同じ素材）を `src/lib/pdf/brand.ts` から参照する
 - ダウンロード導線: `/downloads/`（一覧）、サービス各ページのヒーローと末尾、サービス一覧のヒーロー、トップのサービス欄、フッター。`DownloadPdf.astro` を使う
 - PDF は sitemap に含めない（`/downloads/` の一覧ページだけ載る）
 - 英語版 PDF は未対応（Phase 2）
@@ -144,7 +145,7 @@ git commit -m "ci: enable GitHub Actions workflow" && git push
 ## 残タスク
 
 - [x] Google Form 作成 → `src/lib/site.ts` の `GOOGLE_FORM_URL_JA` / `GOOGLE_FORM_URL_EN` を本番 URL に差し替え
-- [ ] `public/og-default.png` を正式デザインに差し替え（現状は無地グラデーションのプレースホルダ）
+- [x] `public/og-default.png` を正式デザインに差し替え（カプセル＋葉のブランドマーク。`public/logo-mark.png` / `icon-*.png` / `favicon.svg` と同じ素材）
 - [x] Cloudflare ダッシュボードで GitHub 連携（ビルド: `pnpm build` / 出力: `dist`）
 - [x] カスタムドメイン `solutions.techvit.me` の割り当て
 - [ ] デプロイ後、Search Console にプロパティ登録 → `sitemap-index.xml` を送信、Analytics（GA4 など）タグを `Base.astro` に追加
