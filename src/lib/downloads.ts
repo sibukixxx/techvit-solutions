@@ -12,6 +12,8 @@ export function servicePdfPath(slug: string): string {
   return `/downloads/services/${slug}.pdf`;
 }
 
+export const WEBMCP_PDF_PATH = "/downloads/webmcp.pdf";
+
 /** ダウンロード時のファイル名（download 属性用） */
 export function pdfFilename(name: string): string {
   return `${SITE_NAME.replace(/\s+/g, "")}_${name}.pdf`;

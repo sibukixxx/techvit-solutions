@@ -16,6 +16,7 @@ import {
 } from "@/lib/downloads";
 import { plans } from "@/lib/plans";
 import { getServicesByKind } from "@/lib/services";
+import { WEBMCP_BADGE, WEBMCP_HERO, WEBMCP_TITLE } from "@/lib/webmcp";
 
 const { core, entry } = await getServicesByKind();
 const automations = (
@@ -121,6 +122,20 @@ const ongoing = plans("ja").find((p) => p.recurring);
       </div>
     </Section>
   </div>
+
+  <Section
+    title="SaaS事業者の方へ：実験的な取り組み"
+    lead="ここまでの5サービスとは対象読者・料金体系が異なります。SaaS管理画面の運営者向けの、先行検証サービスです。"
+  >
+    <div class="rounded-xl border border-slate-200 bg-white p-6">
+      <p class="text-xs font-bold text-brand-600">{WEBMCP_BADGE}</p>
+      <h3 class="mt-1 text-lg font-bold text-slate-900">{WEBMCP_TITLE}</h3>
+      <p class="mt-2 max-w-2xl text-sm text-slate-600">{WEBMCP_HERO.lead}</p>
+      <a href="/services/webmcp/" class="mt-4 inline-block text-sm font-bold text-brand-600">
+        詳しく見る →
+      </a>
+    </div>
+  </Section>
 
   <Cta />
 </Base>

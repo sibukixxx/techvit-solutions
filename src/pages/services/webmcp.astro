@@ -1,0 +1,232 @@
+---
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import DownloadPdf from "@/components/DownloadPdf.astro";
+import Button from "@/components/ui/Button.astro";
+import Section from "@/components/ui/Section.astro";
+import Landing from "@/layouts/Landing.astro";
+import { pdfFilename, WEBMCP_PDF_PATH } from "@/lib/downloads";
+import { faqJsonLd } from "@/lib/seo";
+import {
+  WEBMCP_BADGE,
+  WEBMCP_CONCLUSION,
+  WEBMCP_DELIVERABLES,
+  WEBMCP_DEMO_NOTE,
+  WEBMCP_DESCRIPTION,
+  WEBMCP_DISCLAIMER,
+  WEBMCP_FAQ,
+  WEBMCP_FINAL_CTA,
+  WEBMCP_FORM_FIELDS,
+  WEBMCP_HERO,
+  WEBMCP_NOT_VS_SELL,
+  WEBMCP_PLANS,
+  WEBMCP_POC_SCOPE,
+  WEBMCP_PRICE_NOTE,
+  WEBMCP_PROBLEM,
+  WEBMCP_PROCESS,
+  WEBMCP_SHORT,
+  WEBMCP_TITLE,
+  WEBMCP_VALUE_POINTS,
+} from "@/lib/webmcp";
+
+const jsonLd = [faqJsonLd(WEBMCP_FAQ)];
+const pdfName = pdfFilename(WEBMCP_SHORT);
+---
+
+<Landing title={WEBMCP_TITLE} description={WEBMCP_DESCRIPTION} jsonLd={jsonLd}>
+  <Breadcrumb items={[{ name: "サービス", path: "/services/" }, { name: WEBMCP_TITLE }]} />
+
+  <div class="bg-gradient-to-b from-brand-950 to-brand-900 text-white">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:py-20">
+      <span class="inline-block rounded-full bg-accent-500 px-2.5 py-0.5 text-xs font-bold text-brand-950">
+        {WEBMCP_BADGE}
+      </span>
+      <h1 class="mt-3 max-w-3xl text-3xl font-bold leading-tight sm:text-4xl">
+        {WEBMCP_HERO.heading}
+      </h1>
+      <p class="mt-4 max-w-2xl text-lg text-brand-100">{WEBMCP_HERO.lead}</p>
+      <div class="mt-8 flex flex-wrap gap-4">
+        <Button href="/contact/" size="lg" class="bg-accent-500 text-brand-950 hover:bg-accent-600">
+          {WEBMCP_HERO.cta}
+        </Button>
+        <DownloadPdf href={WEBMCP_PDF_PATH} filename={pdfName} variant="light" label="資料をPDFでダウンロード" />
+      </div>
+    </div>
+    <div class="border-t border-white/10 bg-black/20">
+      <p class="mx-auto max-w-6xl px-4 py-3 text-sm text-brand-100">
+        <span class="mr-1.5 font-bold text-accent-400">注記</span>
+        {WEBMCP_DISCLAIMER}
+      </p>
+    </div>
+  </div>
+
+  <Section>
+    <div class="max-w-3xl rounded-xl border border-brand-200 bg-brand-50 p-6">
+      <p class="text-xs font-bold text-brand-700">この仕様の結論</p>
+      <p class="mt-2 text-slate-800">{WEBMCP_CONCLUSION}</p>
+    </div>
+    <div class="mt-8 grid gap-px overflow-hidden rounded-xl border border-slate-200 bg-slate-200 sm:grid-cols-2">
+      <div class="bg-slate-50 p-5">
+        <p class="text-sm font-bold text-slate-500">売らないもの</p>
+        <ul class="mt-3 space-y-3">
+          {
+            WEBMCP_NOT_VS_SELL.map((item) => (
+              <li class="text-sm text-slate-600">{item.not}</li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="bg-white p-5">
+        <p class="text-sm font-bold text-brand-700">売るもの</p>
+        <ul class="mt-3 space-y-3">
+          {
+            WEBMCP_NOT_VS_SELL.map((item) => (
+              <li class="text-sm font-medium text-slate-800">{item.sell}</li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section title="課題提起">
+      <p class="max-w-3xl text-slate-700">{WEBMCP_PROBLEM}</p>
+    </Section>
+  </div>
+
+  <Section title="提供価値">
+    <ul class="grid gap-3 sm:grid-cols-2">
+      {
+        WEBMCP_VALUE_POINTS.map((v, i) => (
+          <li class="flex gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
+            <span class="font-bold text-brand-600">{i + 1}.</span>
+            <span>{v}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section title="デモ">
+      <div class="max-w-3xl rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center">
+        <p class="text-sm text-slate-500">🎬 準備中</p>
+        <p class="mt-3 text-sm text-slate-600">{WEBMCP_DEMO_NOTE}</p>
+      </div>
+    </Section>
+  </div>
+
+  <Section
+    title="進め方"
+    lead="いきなり本導入は勧めません。診断で対象を絞り、1ツールのPoCで実際に評価してから本導入を判断します。"
+  >
+    <div class="grid gap-4 sm:grid-cols-4">
+      {
+        WEBMCP_PROCESS.map((s) => (
+          <div class="rounded-lg border border-slate-200 bg-white px-4 py-4 text-center">
+            <p class="text-xs font-bold text-brand-600">{s.step}</p>
+            <p class="mt-1 text-sm font-bold text-slate-900">{s.name}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section
+      title="料金"
+      lead="診断10〜20万円／1ツールPoC 20〜40万円／本導入50〜100万円〜／継続改善 月5〜15万円。画面数・権限・監査要件により個別見積りです。"
+    >
+      <div class="grid gap-6 lg:grid-cols-4">
+        {
+          WEBMCP_PLANS.map((p) => (
+            <div class:list={["rounded-xl border p-6", p.recurring ? "border-brand-200 bg-brand-50/40" : "border-slate-200 bg-white"]}>
+              <p class="text-xs font-bold text-brand-600">
+                {p.id}. {p.name}
+              </p>
+              <p class="mt-2 text-2xl font-bold text-slate-900">{p.price}</p>
+              <p class="mt-4 text-sm text-slate-700">{p.scope}</p>
+              <p class="mt-3 border-t border-slate-100 pt-3 text-xs text-slate-500">
+                成果物：{p.deliverables}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="mt-6 max-w-3xl text-xs text-slate-500">{WEBMCP_PRICE_NOTE}</p>
+    </Section>
+  </div>
+
+  <Section
+    title="1ツールPoCの範囲"
+    lead="「どこまでやってもらえるか」の認識をあわせるための一覧です。本導入は範囲を広げてご提案します。"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[560px] border-collapse text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 text-left text-xs text-slate-500">
+            <th class="py-2 pr-4 font-bold">区分</th>
+            <th class="py-2 pr-4 font-bold text-brand-700">PoCで含む</th>
+            <th class="py-2 font-bold text-slate-400">PoCで含まない</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            WEBMCP_POC_SCOPE.map((row) => (
+              <tr class="border-b border-slate-100">
+                <td class="py-2.5 pr-4 font-bold text-slate-700">{row.area}</td>
+                <td class="py-2.5 pr-4 text-slate-800">{row.included}</td>
+                <td class="py-2.5 text-slate-400">{row.excluded}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-8">
+      <p class="text-sm font-bold text-slate-900">PoC納品物</p>
+      <ul class="mt-3 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
+        {WEBMCP_DELIVERABLES.map((d) => <li>・{d}</li>)}
+      </ul>
+    </div>
+  </Section>
+
+  <div class="bg-slate-50">
+    <Section title="よくある質問">
+      <div class="space-y-4">
+        {
+          WEBMCP_FAQ.map((item) => (
+            <div class="rounded-lg border border-slate-200 bg-white p-6">
+              <p class="font-bold text-slate-900">{item.question}</p>
+              <p class="mt-2 text-sm text-slate-700">{item.answer}</p>
+            </div>
+          ))
+        }
+      </div>
+    </Section>
+  </div>
+
+  <section class="bg-brand-900">
+    <div class="mx-auto max-w-6xl px-4 py-14 text-center sm:py-16">
+      <h2 class="text-2xl font-bold text-white sm:text-3xl">{WEBMCP_FINAL_CTA.lead}</h2>
+      <div class="mt-8">
+        <Button href="/contact/" size="lg" class="bg-accent-500 hover:bg-accent-600 text-brand-950">
+          {WEBMCP_FINAL_CTA.button}
+        </Button>
+      </div>
+      <div class="mx-auto mt-8 max-w-md rounded-lg bg-white/10 p-5 text-left">
+        <p class="text-xs font-bold text-brand-200">ご相談の際にお伺いする情報</p>
+        <ul class="mt-2 space-y-1 text-sm text-brand-100">
+          {
+            WEBMCP_FORM_FIELDS.map((f) => (
+              <li>
+                ・{f.label}
+                {!f.required && <span class="text-brand-300">（任意）</span>}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</Landing>
